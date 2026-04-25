@@ -1,135 +1,91 @@
 # TASKS.md
 
-> This file is the repo's AI-friendly work tracker.
->  
-> Keep it lightweight for small projects and structured for larger ones.
+> Work tracker for Fry-By.
 
 ---
 
-## PURPOSE OF THIS FILE
-
-Use this file to:
-- track implementation work
-- generate agent-ready tasks
-- manage milestones or epics when needed
-- preserve what is next, in progress, blocked, or complete
-
-Do not create fake complexity for tiny projects.
-
----
-
-## TASK SYSTEM SIZE
-
-### Current mode
-- minimal
-- standard
-- structured
-
-### Guidance
-- **minimal** = short checklist for small projects
-- **standard** = grouped tasks with acceptance criteria
-- **structured** = milestone/epic + task IDs + dependencies
-
-Selected:
-[TBD]
+## CURRENT MODE
+standard
 
 ---
 
 ## STATUS LEGEND
-
-- `todo`
-- `in_progress`
-- `blocked`
-- `done`
-- `deferred`
-
----
-
-## CURRENT FOCUS
-
-- [TBD]
-
----
-
-## MINIMAL MODE TEMPLATE
-
-Use this when the project is small.
-
-- [ ] Task
-- [ ] Task
-- [ ] Task
-
----
-
-## STANDARD MODE TEMPLATE
-
-### Task
-- **ID:** T-[number]
-- **Title:** [title]
-- **Status:** todo | in_progress | blocked | done | deferred
-- **Purpose:** [why this matters]
-- **Scope:** [what is included]
-- **Out of Scope:** [what is not included]
-- **Prerequisites:** [dependencies]
-- **Implementation Notes:** [helpful context]
-- **Acceptance Criteria:**
-  - [criterion]
-  - [criterion]
-
----
-
-## STRUCTURED MODE TEMPLATE
-
-### Milestone / Epic
-- **ID:** M-[number]
-- **Title:** [title]
-- **Outcome:** [what this milestone accomplishes]
-
-#### Task
-- **ID:** T-[number]
-- **Title:** [title]
-- **Status:** todo | in_progress | blocked | done | deferred
-- **Parent:** M-[number]
-- **Purpose:** [why]
-- **Scope:** [included work]
-- **Dependencies:** [task IDs or repo facts]
-- **Agent Notes:** [instructions for an AI coding agent]
-- **Acceptance Criteria:**
-  - [criterion]
-  - [criterion]
-
----
-
-## AUTO TASK GENERATION RULES
-
-When generating tasks:
-- break work into slices that are implementation-ready
-- avoid giant vague tasks
-- include enough context that another agent could execute them
-- derive tasks from confirmed project state, not wishful guesses
-- keep dependencies explicit
-- update status as the project moves
-
----
-
-## ACTIVE TASKS
-
-[TBD]
-
----
-
-## BACKLOG
-
-[TBD]
-
----
-
-## BLOCKERS
-
-[TBD]
+- `done` — complete
+- `todo` — not started
+- `in_progress` — actively being worked
+- `blocked` — waiting on something
 
 ---
 
 ## DONE
 
-[TBD]
+### T-001 — Project definition and AI file setup
+- **Status:** done
+- **Summary:** Completed full intake, shaping, and scaffolding phases. Confirmed stack, data model, scoring approach, screen structure. AI files written.
+
+### T-002 — Initial scaffold: all Swift source files
+- **Status:** done
+- **Summary:** All Swift source files written: models, scoring layer, all views and components. Xcode project setup pending (manual step for user).
+
+---
+
+## ACTIVE TASKS
+
+### T-003 — Xcode project setup
+- **ID:** T-003
+- **Title:** Create and configure Xcode project
+- **Status:** todo
+- **Purpose:** Wire all source files into a buildable Xcode project
+- **Scope:** Create new iOS App project in Xcode, add all files from `FryBy/`, configure SwiftData container
+- **Prerequisites:** T-002
+- **Implementation Notes:** See `XCODE_SETUP.md` for step-by-step instructions
+- **Acceptance Criteria:**
+  - Project builds without errors
+  - App launches on simulator
+  - Home screen appears
+
+### T-004 — Smoke test core flow
+- **ID:** T-004
+- **Title:** Verify end-to-end entry flow
+- **Status:** todo
+- **Purpose:** Confirm the MVP flow works: create entry → view in list → view detail → edit
+- **Prerequisites:** T-003
+- **Acceptance Criteria:**
+  - Can create a new fry entry with all required fields
+  - Entry appears in the fry log list with correct restaurant name, date, and score
+  - Can tap entry to view detail — all fields displayed correctly
+  - Can edit entry — changes persist
+  - Entries survive app restart (SwiftData persistence confirmed)
+  - Nullable fields correctly absent from detail view when not entered
+
+### T-005 — Score algorithm review
+- **ID:** T-005
+- **Title:** Review and tune initial scoring weights
+- **Status:** todo
+- **Purpose:** Validate that the provisional scoring weights produce scores that feel right
+- **Prerequisites:** T-004
+- **Implementation Notes:** All weights are in `FryBy/Scoring/DefaultFryScorer.swift` under `Weights`. Modify only that file.
+- **Acceptance Criteria:**
+  - User has logged at least 5 entries
+  - Overall scores feel proportional and meaningful
+  - Weights adjusted if needed
+
+---
+
+## BACKLOG
+
+- [ ] Add more filter/sort options to the entry list (by score, by fry type)
+- [ ] Leaderboard view: best fries across all entries
+- [ ] Stats screen: average score by restaurant, by fry type
+- [ ] Re-score all entries button (apply updated algorithm to existing entries)
+- [ ] Social layer: friends, activity feed (requires server)
+- [ ] Android support
+- [ ] Additional food categories
+- [ ] Photos on entries
+- [ ] Export / backup
+
+---
+
+## BLOCKERS
+
+None currently.
