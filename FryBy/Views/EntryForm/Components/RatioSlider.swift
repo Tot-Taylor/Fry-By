@@ -3,16 +3,17 @@ import SwiftUI
 struct RatioSlider: View {
     @Binding var value: Int
 
+    // Ratios increment by ~25% steps. Bigger number always listed first regardless of side.
     private static let labels: [Int: String] = [
-        -4: "All Crispy (5:0)",
+        -4: "All Crispy",
         -3: "Mostly Crispy (4:1)",
-        -2: "More Crispy (3:2)",
-        -1: "Slightly More Crispy",
-         0: "Even Split (1:1)",
-         1: "Slightly More Floppy",
-         2: "More Floppy (2:3)",
-         3: "Mostly Floppy (1:4)",
-         4: "All Floppy (0:5)"
+        -2: "More Crispy (2:1)",
+        -1: "Slightly Crispy (4:3)",
+         0: "Even Split",
+         1: "Slightly Floppy (4:3)",
+         2: "More Floppy (2:1)",
+         3: "Mostly Floppy (4:1)",
+         4: "All Floppy"
     ]
 
     private var doubleBinding: Binding<Double> {
@@ -25,13 +26,13 @@ struct RatioSlider: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("Crispy:Floppy Ratio")
+                Text("Crispy to Floppy Ratio")
                     .font(.subheadline)
                 Spacer()
-                Text(Self.labels[value] ?? "Even Split (1:1)")
+                Text(Self.labels[value] ?? "Even Split")
                     .font(.caption)
                     .fontWeight(.medium)
-                    .foregroundStyle(value == 0 ? Color.green : Color.primary)
+                    .foregroundStyle(.primary)
             }
             HStack(spacing: 8) {
                 Text("All Crispy")

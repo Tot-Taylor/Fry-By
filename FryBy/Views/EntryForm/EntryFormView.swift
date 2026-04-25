@@ -16,10 +16,12 @@ struct FryFormData {
     var ketchupFlavor: Int = 5
     var hasSignatureSauce: Bool = false
     var signatureSauceFlavor: Int = 5
+    var signatureSauceName: String = ""
     var hasDunkability: Bool = false
     var dunkability: Int = 5
     var hasExtraSeasoning: Bool = false
     var extraSeasoning: Int = 5
+    var extraSeasoningName: String = ""
     var starchiness: Int = 0
     var crispyFloppyRatio: Int = 0
     var hasCrispyQuality: Bool = false
@@ -42,10 +44,12 @@ struct FryFormData {
         ketchupFlavor       = entry.ketchupFlavor ?? 5
         hasSignatureSauce   = entry.signatureSauceFlavor != nil
         signatureSauceFlavor = entry.signatureSauceFlavor ?? 5
+        signatureSauceName  = entry.signatureSauceName ?? ""
         hasDunkability      = entry.dunkability != nil
         dunkability         = entry.dunkability ?? 5
         hasExtraSeasoning   = entry.extraSeasoning != nil
         extraSeasoning      = entry.extraSeasoning ?? 5
+        extraSeasoningName  = entry.extraSeasoningName ?? ""
         starchiness         = entry.starchiness
         crispyFloppyRatio   = entry.crispyFloppyRatio
         hasCrispyQuality    = entry.crispyQuality != nil
@@ -95,7 +99,6 @@ struct EntryFormView: View {
             Form {
                 basicInfoSection
                 flavorSection
-                sauceSeasoningSection
                 textureSection
                 contextSection
                 notesSection
@@ -135,34 +138,31 @@ struct EntryFormView: View {
     private var flavorSection: some View {
         Section("Flavor") {
             RatingSlider(title: "Undipped Flavor", value: $data.undippedFlavor)
-        }
-    }
 
-    private var sauceSeasoningSection: some View {
-        Section {
             Toggle("Dipped in Ketchup", isOn: $data.hasKetchupFlavor)
             if data.hasKetchupFlavor {
-                RatingSlider(title: "Ketchup Flavor", value: $data.ketchupFlavor)
+                RatingSlider(title: "Flavor in Ketchup", value: $data.ketchupFlavor)
             }
 
-            Toggle("Signature Sauce Available", isOn: $data.hasSignatureSauce)
+            Toggle("Dipped in Other Sauce", isOn: $data.hasSignatureSauce)
             if data.hasSignatureSauce {
-                RatingSlider(title: "Signature Sauce Flavor", value: $data.signatureSauceFlavor)
+                RatingSlider(
+                    title: data.signatureSauceName.isEmpty ? "Flavor in Other Sauce" : "Flavor in \(data.signatureSauceName)",
+                    value: $data.signatureSauceFlavor
+                )
+                TextField("Other Sauce Name", text: $data.signatureSauceName)
             }
 
-            Toggle("Rate Dunkability", isOn: $data.hasDunkability)
+            Toggle("Dunkability", isOn: $data.hasDunkability)
             if data.hasDunkability {
-                RatingSlider(title: "Dunkability", value: $data.dunkability)
+                RatingSlider(title: "Sauce Retention", value: $data.dunkability)
             }
 
             Toggle("Extra Seasoning Present", isOn: $data.hasExtraSeasoning)
             if data.hasExtraSeasoning {
-                RatingSlider(title: "Extra Seasoning", value: $data.extraSeasoning)
+                RatingSlider(title: "Flavor with Extra Seasoning", value: $data.extraSeasoning)
+                TextField("Seasoning Name", text: $data.extraSeasoningName)
             }
-        } header: {
-            Text("Sauce & Seasoning")
-        } footer: {
-            Text("Only enable fields that apply to this order.")
         }
     }
 
@@ -177,20 +177,20 @@ struct EntryFormView: View {
 
             RatioSlider(value: $data.crispyFloppyRatio)
 
-            Toggle("Rate Crispy Fry Quality", isOn: $data.hasCrispyQuality)
+            Toggle("Crispy Fry Quality", isOn: $data.hasCrispyQuality)
             if data.hasCrispyQuality {
                 SpectrumSlider(
-                    title: "Crispy Quality",
+                    title: "",
                     value: $data.crispyQuality,
                     negativeLabel: "Not Crispy Enough",
-                    positiveLabel: "Over-Crispy"
+                    positiveLabel: "Too Crispy"
                 )
             }
 
-            Toggle("Rate Floppy Fry Quality", isOn: $data.hasFloppyQuality)
+            Toggle("Floppy Fry Quality", isOn: $data.hasFloppyQuality)
             if data.hasFloppyQuality {
                 SpectrumSlider(
-                    title: "Floppy Quality",
+                    title: "",
                     value: $data.floppyQuality,
                     negativeLabel: "Not Floppy Enough",
                     positiveLabel: "Too Floppy"
@@ -206,8 +206,18 @@ struct EntryFormView: View {
                     Text(temp.rawValue).tag(temp)
                 }
             }
-            RatingSlider(title: "Hunger Level", value: $data.hungerLevel)
-            RatingSlider(title: "Appearance", value: $data.appearance)
+            RatingSlider(
+                title: "Hunger Level",
+                value: $data.hungerLevel,
+                leftLabel: "Full",
+                rightLabel: "Starving"
+            )
+            RatingSlider(
+                title: "Appearance",
+                value: $data.appearance,
+                leftLabel: "Disgusting",
+                rightLabel: "Incredible"
+            )
         }
     }
 
@@ -224,6 +234,8 @@ struct EntryFormView: View {
         let score = FryScorer.score(data.ratingInput)
         let trimmedName = data.restaurantName.trimmingCharacters(in: .whitespaces)
         let notesValue: String? = data.notes.isEmpty ? nil : data.notes
+        let sauceName: String? = data.hasSignatureSauce && !data.signatureSauceName.isEmpty ? data.signatureSauceName : nil
+        let seasoningName: String? = data.hasExtraSeasoning && !data.extraSeasoningName.isEmpty ? data.extraSeasoningName : nil
 
         if let entry = editingEntry {
             entry.restaurantName      = trimmedName
@@ -236,8 +248,10 @@ struct EntryFormView: View {
             entry.undippedFlavor      = data.undippedFlavor
             entry.ketchupFlavor       = data.hasKetchupFlavor  ? data.ketchupFlavor        : nil
             entry.signatureSauceFlavor = data.hasSignatureSauce ? data.signatureSauceFlavor : nil
+            entry.signatureSauceName  = sauceName
             entry.dunkability         = data.hasDunkability     ? data.dunkability          : nil
             entry.extraSeasoning      = data.hasExtraSeasoning  ? data.extraSeasoning       : nil
+            entry.extraSeasoningName  = seasoningName
             entry.starchiness         = data.starchiness
             entry.crispyFloppyRatio   = data.crispyFloppyRatio
             entry.crispyQuality       = data.hasCrispyQuality   ? data.crispyQuality        : nil
@@ -255,8 +269,10 @@ struct EntryFormView: View {
                 undippedFlavor:       data.undippedFlavor,
                 ketchupFlavor:        data.hasKetchupFlavor  ? data.ketchupFlavor        : nil,
                 signatureSauceFlavor: data.hasSignatureSauce ? data.signatureSauceFlavor : nil,
+                signatureSauceName:   sauceName,
                 dunkability:          data.hasDunkability     ? data.dunkability          : nil,
                 extraSeasoning:       data.hasExtraSeasoning  ? data.extraSeasoning       : nil,
+                extraSeasoningName:   seasoningName,
                 starchiness:          data.starchiness,
                 crispyFloppyRatio:    data.crispyFloppyRatio,
                 crispyQuality:        data.hasCrispyQuality   ? data.crispyQuality        : nil,

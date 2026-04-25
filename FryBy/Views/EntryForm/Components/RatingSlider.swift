@@ -3,6 +3,8 @@ import SwiftUI
 struct RatingSlider: View {
     let title: String
     @Binding var value: Int
+    var leftLabel: String? = nil
+    var rightLabel: String? = nil
 
     private var doubleBinding: Binding<Double> {
         Binding(
@@ -23,8 +25,23 @@ struct RatingSlider: View {
                     .foregroundStyle(ratingColor(value))
                     .monospacedDigit()
             }
-            Slider(value: doubleBinding, in: 1...10, step: 1)
-                .tint(ratingColor(value))
+            if leftLabel != nil || rightLabel != nil {
+                HStack(spacing: 8) {
+                    Text(leftLabel ?? "")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .frame(width: 58, alignment: .leading)
+                    Slider(value: doubleBinding, in: 1...10, step: 1)
+                        .tint(ratingColor(value))
+                    Text(rightLabel ?? "")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .frame(width: 58, alignment: .trailing)
+                }
+            } else {
+                Slider(value: doubleBinding, in: 1...10, step: 1)
+                    .tint(ratingColor(value))
+            }
         }
         .padding(.vertical, 2)
     }
