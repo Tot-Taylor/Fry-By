@@ -1,201 +1,176 @@
 # PROJECT_SPEC.md
 
 > Canonical evolving project specification.
->  
-> This file captures the project at the product and implementation-intent level without forcing full architecture upfront.
-
----
-
-## PURPOSE OF THIS FILE
-
-Use this file to keep a durable, evolving source of truth for:
-- what the project is
-- who it is for
-- what it should do
-- what it should not do
-- what is confirmed vs still open
-- what matters most right now
-
-This file should remain useful for:
-- the repo owner
-- future AI sessions
-- implementation agents
-- planning agents
-- testing agents
-- scaffolding agents
 
 ---
 
 ## PROJECT SNAPSHOT
 
 ### Name
-[TBD]
+Fry-By
 
 ### One-Sentence Summary
-[TBD]
+A personal iOS app for rating French fries across detailed criteria, with all data stored locally on-device.
 
 ### Current Phase
-- intake
-- shaping
-- scaffolding
-- implementation
-- maintenance
+- [x] intake
+- [x] shaping
+- [x] scaffolding
+- [ ] implementation ← current
+- [ ] maintenance
 
 ### Project Scale
-- small
-- medium
-- large
-- unknown
+- [ ] small
+- [x] medium
+- [ ] large
 
 ### Confidence Level
-- low
-- medium
-- high
+- [ ] low
+- [ ] medium
+- [x] high
 
 ---
 
 ## RAW IDEA
 
 ### User-provided idea
-[TBD]
-
-### AI-expanded description
-[TBD]
+An app used to rate French fries on a variety of criteria. Scoped to French fries for now, with other foods planned for future expansion.
 
 ### Problem being solved
-[TBD]
+No good tool exists for tracking and comparing fry quality across restaurants using meaningful, granular criteria.
 
 ### Why this project matters
-[TBD]
+Personal + friend-group use. Creates a structured, persistent record of fry experiences to compare restaurants and fry types over time.
 
 ---
 
 ## USERS AND USE CASES
 
 ### Target users
-- [TBD]
+- Primary user and their friend group
 
 ### Primary use cases
-- [TBD]
+- Log a new fry rating after visiting a restaurant
+- View past fry entries
+- Compare ratings across restaurants
 
 ### Secondary use cases
-- [TBD]
+- Retroactively add entries for past experiences (date/time is editable)
+- Filter entry list by restaurant name
 
-### Out-of-scope use cases
-- [TBD]
+### Out-of-scope use cases (current)
+- Social features (friends, activity feed) — deferred
+- Android support — deferred
+- Other food categories — deferred
+- Photos on entries — deferred
+- Server-side storage or syncing — deferred
 
 ---
 
 ## GOALS
 
 ### Primary goals
-- [TBD]
+- Log fry ratings with detailed criteria
+- Persist ratings across app sessions (local SwiftData)
+- View a filterable list of past entries
+- View full detail of any past entry
+- Edit existing entries
 
 ### Secondary goals
-- [TBD]
+- Clean, intuitive UX for a fun personal tool
+- Architecture that doesn't fight future social/sync layer
 
-### Non-goals
-- [TBD]
+### Non-goals (MVP)
+- Accounts, auth, server
+- Sharing or export
+- Push notifications
+- Widgets
 
 ### First version success criteria
-- [TBD]
+- Can log a new fry entry with all required criteria
+- Can mark optional fields as N/A
+- Entries persist after closing the app
+- Can view a list of past entries sorted by date
+- Can tap an entry to see full detail
+- Can edit an existing entry
 
 ---
 
 ## SCOPE SHAPE
 
 ### MVP / first usable version
-[TBD]
+Home screen → Fry Log list → New Entry form → Detail view + Edit
 
 ### Likely later expansions
-[TBD]
+- Social layer: friends, activity feeds, shared ratings
+- Other food categories (burger, pizza, etc.)
+- Android support
+- Photos on entries
+- Advanced leaderboard / stats views
+- Revised scoring algorithm based on real usage data
 
 ### What is intentionally deferred
-[TBD]
+Everything in the future scope list above.
 
 ---
 
 ## CONSTRAINTS
 
-### Product constraints
-- [TBD]
-
 ### Technical constraints
-- [TBD]
-
-### Time / effort constraints
-- [TBD]
+- iOS 17+ required (SwiftData dependency)
+- Swift + Xcode only
+- No network layer in MVP
 
 ### Maintenance expectations
-- [TBD]
+- Actively maintained and likely to expand substantially
 
 ---
 
 ## CONFIRMED DECISIONS
 
-Only include decisions explicitly confirmed by the user or later validated in the repo.
-
-- [TBD]
-
----
-
-## PROPOSED OPTIONS
-
-Use this area to capture candidate directions before confirmation.
-
-- [TBD]
+- **Platform:** iOS only (Android deferred)
+- **Language/Framework:** Swift + SwiftUI
+- **Persistence:** SwiftData (local, on-device only)
+- **Minimum OS:** iOS 17
+- **Data stays local:** No server, no sync in MVP
+- **Home screen is bare but extensible:** No placeholder buttons; structured to add nav destinations later
+- **Scoring is fully modular:** All logic in a single swappable module; zero leakage into views
+- **Overall score stored at save time:** Score is computed and persisted; doesn't retroactively change if algorithm updates
+- **Nullable fields:** ketchupFlavor, signatureSauceFlavor, dunkability, extraSeasoning, crispyQuality, floppyQuality
+- **Spectrum sliders use -4 to +4:** 9 discrete steps; 0 = ideal
+- **Crispy:Floppy ratio uses same -4/+4 scale:** Left = more crispy, right = more floppy; displayed as ratio labels (e.g. "4:1", "1:1", "0:5")
+- **UUID on every entry:** Stable identifier for future sync/social layer
 
 ---
 
 ## OPEN QUESTIONS
 
-Keep this list short and high-value.
-
-- [TBD]
-
----
-
-## KNOWN RISKS OR UNCERTAINTIES
-
-- [TBD]
+- What weights should each scoring criterion carry? (Current weights are provisional placeholders)
+- Will the overall score ever need to be retroactively recomputed for all entries?
 
 ---
 
 ## CURRENT PRIORITIES
 
-1. [TBD]
-2. [TBD]
-3. [TBD]
+1. Get Xcode project created and wired to source files
+2. Verify SwiftData model persists correctly
+3. Verify entry form saves and displays correctly
+4. Test edit flow end-to-end
 
 ---
 
 ## REPO AI FILE MAP
 
-This file should point to whichever AI files currently matter.
-
-### Currently active companion files
+### Currently active
 - `AI_ENTRY.md`
 - `PROJECT_SPEC.md`
-
-### Create and activate only when needed
 - `ARCHITECTURE.md`
 - `TASKS.md`
 - `DECISIONS.md`
+
+### Create when needed
 - `PROMPTS.md`
 - `SCAFFOLDING.md`
 - `TEST_STRATEGY.md`
-- `AGENT_HANDOFF.md`
-- `DOMAIN_MODEL.md`
-- `API_SPEC.md`
-- `RELEASE_PLAN.md`
-
----
-
-## UPDATE RULES
-
-When this file is updated:
-- keep confirmed facts separate from proposals
-- remove stale assumptions if they become false
-- reflect actual project maturity
-- do not bloat the file with low-value detail
-- keep it readable by humans and agents
+- `API_SPEC.md` (when social/server layer begins)
+- `DOMAIN_MODEL.md` (when food categories expand)
