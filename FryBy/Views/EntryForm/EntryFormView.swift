@@ -16,6 +16,7 @@ struct FryFormData {
     var ketchupFlavor: Int = 5
     var hasSignatureSauce: Bool = false
     var signatureSauceFlavor: Int = 5
+    var signatureSauceName: String = ""
     var hasDunkability: Bool = false
     var dunkability: Int = 5
     var hasExtraSeasoning: Bool = false
@@ -42,6 +43,7 @@ struct FryFormData {
         ketchupFlavor       = entry.ketchupFlavor ?? 5
         hasSignatureSauce   = entry.signatureSauceFlavor != nil
         signatureSauceFlavor = entry.signatureSauceFlavor ?? 5
+        signatureSauceName  = entry.signatureSauceName ?? ""
         hasDunkability      = entry.dunkability != nil
         dunkability         = entry.dunkability ?? 5
         hasExtraSeasoning   = entry.extraSeasoning != nil
@@ -95,7 +97,6 @@ struct EntryFormView: View {
             Form {
                 basicInfoSection
                 flavorSection
-                sauceSeasoningSection
                 textureSection
                 contextSection
                 notesSection
@@ -135,19 +136,19 @@ struct EntryFormView: View {
     private var flavorSection: some View {
         Section("Flavor") {
             RatingSlider(title: "Undipped Flavor", value: $data.undippedFlavor)
-        }
-    }
 
-    private var sauceSeasoningSection: some View {
-        Section {
             Toggle("Dipped in Ketchup", isOn: $data.hasKetchupFlavor)
             if data.hasKetchupFlavor {
-                RatingSlider(title: "Ketchup Flavor", value: $data.ketchupFlavor)
+                RatingSlider(title: "Flavor in Ketchup", value: $data.ketchupFlavor)
             }
 
-            Toggle("Signature Sauce Available", isOn: $data.hasSignatureSauce)
+            Toggle("Dipped in Signature Sauce", isOn: $data.hasSignatureSauce)
             if data.hasSignatureSauce {
-                RatingSlider(title: "Signature Sauce Flavor", value: $data.signatureSauceFlavor)
+                RatingSlider(
+                    title: data.signatureSauceName.isEmpty ? "Flavor in Signature Sauce" : "Flavor in \(data.signatureSauceName)",
+                    value: $data.signatureSauceFlavor
+                )
+                TextField("Signature Sauce Name", text: $data.signatureSauceName)
             }
 
             Toggle("Rate Dunkability", isOn: $data.hasDunkability)
@@ -157,12 +158,8 @@ struct EntryFormView: View {
 
             Toggle("Extra Seasoning Present", isOn: $data.hasExtraSeasoning)
             if data.hasExtraSeasoning {
-                RatingSlider(title: "Extra Seasoning", value: $data.extraSeasoning)
+                RatingSlider(title: "Seasoning Flavor", value: $data.extraSeasoning)
             }
-        } header: {
-            Text("Sauce & Seasoning")
-        } footer: {
-            Text("Only enable fields that apply to this order.")
         }
     }
 
@@ -183,7 +180,7 @@ struct EntryFormView: View {
                     title: "Crispy Quality",
                     value: $data.crispyQuality,
                     negativeLabel: "Not Crispy Enough",
-                    positiveLabel: "Over-Crispy"
+                    positiveLabel: "Too Crispy"
                 )
             }
 
@@ -206,8 +203,18 @@ struct EntryFormView: View {
                     Text(temp.rawValue).tag(temp)
                 }
             }
-            RatingSlider(title: "Hunger Level", value: $data.hungerLevel)
-            RatingSlider(title: "Appearance", value: $data.appearance)
+            RatingSlider(
+                title: "Hunger Level",
+                value: $data.hungerLevel,
+                leftLabel: "Full",
+                rightLabel: "Starving"
+            )
+            RatingSlider(
+                title: "Appearance",
+                value: $data.appearance,
+                leftLabel: "Disgusting",
+                rightLabel: "Incredible"
+            )
         }
     }
 
@@ -224,6 +231,7 @@ struct EntryFormView: View {
         let score = FryScorer.score(data.ratingInput)
         let trimmedName = data.restaurantName.trimmingCharacters(in: .whitespaces)
         let notesValue: String? = data.notes.isEmpty ? nil : data.notes
+        let sauceName: String? = data.hasSignatureSauce && !data.signatureSauceName.isEmpty ? data.signatureSauceName : nil
 
         if let entry = editingEntry {
             entry.restaurantName      = trimmedName
@@ -236,6 +244,7 @@ struct EntryFormView: View {
             entry.undippedFlavor      = data.undippedFlavor
             entry.ketchupFlavor       = data.hasKetchupFlavor  ? data.ketchupFlavor        : nil
             entry.signatureSauceFlavor = data.hasSignatureSauce ? data.signatureSauceFlavor : nil
+            entry.signatureSauceName  = sauceName
             entry.dunkability         = data.hasDunkability     ? data.dunkability          : nil
             entry.extraSeasoning      = data.hasExtraSeasoning  ? data.extraSeasoning       : nil
             entry.starchiness         = data.starchiness
@@ -255,6 +264,7 @@ struct EntryFormView: View {
                 undippedFlavor:       data.undippedFlavor,
                 ketchupFlavor:        data.hasKetchupFlavor  ? data.ketchupFlavor        : nil,
                 signatureSauceFlavor: data.hasSignatureSauce ? data.signatureSauceFlavor : nil,
+                signatureSauceName:   sauceName,
                 dunkability:          data.hasDunkability     ? data.dunkability          : nil,
                 extraSeasoning:       data.hasExtraSeasoning  ? data.extraSeasoning       : nil,
                 starchiness:          data.starchiness,

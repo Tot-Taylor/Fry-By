@@ -14,6 +14,7 @@ final class FryEntry {
     var undippedFlavor: Int
     var ketchupFlavor: Int?
     var signatureSauceFlavor: Int?
+    var signatureSauceName: String?
     var dunkability: Int?
     var extraSeasoning: Int?
     var starchiness: Int        // –4 to +4; 0 = perfect
@@ -33,6 +34,7 @@ final class FryEntry {
         undippedFlavor: Int,
         ketchupFlavor: Int? = nil,
         signatureSauceFlavor: Int? = nil,
+        signatureSauceName: String? = nil,
         dunkability: Int? = nil,
         extraSeasoning: Int? = nil,
         starchiness: Int,
@@ -52,6 +54,7 @@ final class FryEntry {
         self.undippedFlavor = undippedFlavor
         self.ketchupFlavor = ketchupFlavor
         self.signatureSauceFlavor = signatureSauceFlavor
+        self.signatureSauceName = signatureSauceName
         self.dunkability = dunkability
         self.extraSeasoning = extraSeasoning
         self.starchiness = starchiness

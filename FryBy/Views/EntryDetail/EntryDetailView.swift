@@ -47,10 +47,17 @@ struct EntryDetailView: View {
     private var flavorSection: some View {
         Section("Flavor") {
             ratingRow("Undipped Flavor", value: entry.undippedFlavor)
-            if let v = entry.ketchupFlavor        { ratingRow("Dipped in Ketchup", value: v) }
-            if let v = entry.signatureSauceFlavor  { ratingRow("Signature Sauce Dipped", value: v) }
-            if let v = entry.dunkability           { ratingRow("Dunkability", value: v) }
-            if let v = entry.extraSeasoning        { ratingRow("Extra Seasoning", value: v) }
+            if let v = entry.ketchupFlavor { ratingRow("Flavor in Ketchup", value: v) }
+            if let v = entry.signatureSauceFlavor {
+                if let name = entry.signatureSauceName, !name.isEmpty {
+                    LabeledContent("Signature Sauce", value: name)
+                    ratingRow("Flavor in \(name)", value: v)
+                } else {
+                    ratingRow("Signature Sauce Flavor", value: v)
+                }
+            }
+            if let v = entry.dunkability    { ratingRow("Dunkability", value: v) }
+            if let v = entry.extraSeasoning { ratingRow("Seasoning Flavor", value: v) }
         }
     }
 
@@ -62,13 +69,13 @@ struct EntryDetailView: View {
                 negativeLabel: "Not Starchy Enough",
                 positiveLabel: "Too Starchy"
             )
-            LabeledContent("Crispy:Floppy Ratio", value: ratioLabel(entry.crispyFloppyRatio))
+            LabeledContent("Crispy to Floppy Ratio", value: ratioLabel(entry.crispyFloppyRatio))
             if let v = entry.crispyQuality {
                 spectrumRow(
                     "Crispy Quality",
                     value: v,
                     negativeLabel: "Not Crispy Enough",
-                    positiveLabel: "Over-Crispy"
+                    positiveLabel: "Too Crispy"
                 )
             }
             if let v = entry.floppyQuality {
@@ -122,16 +129,16 @@ struct EntryDetailView: View {
 
     private func ratioLabel(_ value: Int) -> String {
         switch value {
-        case -4: return "All Crispy (5:0)"
+        case -4: return "All Crispy"
         case -3: return "Mostly Crispy (4:1)"
-        case -2: return "More Crispy (3:2)"
-        case -1: return "Slightly More Crispy"
-        case  0: return "Even Split (1:1)"
-        case  1: return "Slightly More Floppy"
-        case  2: return "More Floppy (2:3)"
-        case  3: return "Mostly Floppy (1:4)"
-        case  4: return "All Floppy (0:5)"
-        default: return "Even Split (1:1)"
+        case -2: return "More Crispy (2:1)"
+        case -1: return "Slightly Crispy (4:3)"
+        case  0: return "Even Split"
+        case  1: return "Slightly Floppy (4:3)"
+        case  2: return "More Floppy (2:1)"
+        case  3: return "Mostly Floppy (4:1)"
+        case  4: return "All Floppy"
+        default: return "Even Split"
         }
     }
 
