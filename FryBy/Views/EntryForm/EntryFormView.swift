@@ -142,16 +142,16 @@ struct EntryFormView: View {
                 RatingSlider(title: "Flavor in Ketchup", value: $data.ketchupFlavor)
             }
 
-            Toggle("Dipped in Signature Sauce", isOn: $data.hasSignatureSauce)
+            Toggle("Dipped in Other Sauce", isOn: $data.hasSignatureSauce)
             if data.hasSignatureSauce {
                 RatingSlider(
-                    title: data.signatureSauceName.isEmpty ? "Flavor in Signature Sauce" : "Flavor in \(data.signatureSauceName)",
+                    title: data.signatureSauceName.isEmpty ? "Flavor in Other Sauce" : "Flavor in \(data.signatureSauceName)",
                     value: $data.signatureSauceFlavor
                 )
-                TextField("Signature Sauce Name", text: $data.signatureSauceName)
+                TextField("Other Sauce Name", text: $data.signatureSauceName)
             }
 
-            Toggle("Rate Dunkability", isOn: $data.hasDunkability)
+            Toggle("Dunkability", isOn: $data.hasDunkability)
             if data.hasDunkability {
                 RatingSlider(title: "Dunkability", value: $data.dunkability)
             }
@@ -174,7 +174,7 @@ struct EntryFormView: View {
 
             RatioSlider(value: $data.crispyFloppyRatio)
 
-            Toggle("Rate Crispy Fry Quality", isOn: $data.hasCrispyQuality)
+            Toggle("Crispy Fry Quality", isOn: $data.hasCrispyQuality)
             if data.hasCrispyQuality {
                 SpectrumSlider(
                     title: "Crispy Quality",
@@ -184,7 +184,7 @@ struct EntryFormView: View {
                 )
             }
 
-            Toggle("Rate Floppy Fry Quality", isOn: $data.hasFloppyQuality)
+            Toggle("Floppy Fry Quality", isOn: $data.hasFloppyQuality)
             if data.hasFloppyQuality {
                 SpectrumSlider(
                     title: "Floppy Quality",

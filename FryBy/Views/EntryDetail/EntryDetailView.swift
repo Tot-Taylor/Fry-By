@@ -50,10 +50,10 @@ struct EntryDetailView: View {
             if let v = entry.ketchupFlavor { ratingRow("Flavor in Ketchup", value: v) }
             if let v = entry.signatureSauceFlavor {
                 if let name = entry.signatureSauceName, !name.isEmpty {
-                    LabeledContent("Signature Sauce", value: name)
+                    LabeledContent("Other Sauce", value: name)
                     ratingRow("Flavor in \(name)", value: v)
                 } else {
-                    ratingRow("Signature Sauce Flavor", value: v)
+                    ratingRow("Other Sauce Flavor", value: v)
                 }
             }
             if let v = entry.dunkability    { ratingRow("Dunkability", value: v) }
