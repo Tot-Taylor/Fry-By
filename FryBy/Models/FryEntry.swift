@@ -17,6 +17,7 @@ final class FryEntry {
     var signatureSauceName: String?
     var dunkability: Int?
     var extraSeasoning: Int?
+    var extraSeasoningName: String?
     var starchiness: Int        // –4 to +4; 0 = perfect
     var crispyFloppyRatio: Int  // –4 = all crispy, 0 = even split, +4 = all floppy
     var crispyQuality: Int?     // –4 to +4; 0 = perfectly crispy
@@ -37,6 +38,7 @@ final class FryEntry {
         signatureSauceName: String? = nil,
         dunkability: Int? = nil,
         extraSeasoning: Int? = nil,
+        extraSeasoningName: String? = nil,
         starchiness: Int,
         crispyFloppyRatio: Int,
         crispyQuality: Int? = nil,
@@ -57,6 +59,7 @@ final class FryEntry {
         self.signatureSauceName = signatureSauceName
         self.dunkability = dunkability
         self.extraSeasoning = extraSeasoning
+        self.extraSeasoningName = extraSeasoningName
         self.starchiness = starchiness
         self.crispyFloppyRatio = crispyFloppyRatio
         self.crispyQuality = crispyQuality

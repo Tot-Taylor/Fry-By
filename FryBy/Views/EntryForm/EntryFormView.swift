@@ -21,6 +21,7 @@ struct FryFormData {
     var dunkability: Int = 5
     var hasExtraSeasoning: Bool = false
     var extraSeasoning: Int = 5
+    var extraSeasoningName: String = ""
     var starchiness: Int = 0
     var crispyFloppyRatio: Int = 0
     var hasCrispyQuality: Bool = false
@@ -48,6 +49,7 @@ struct FryFormData {
         dunkability         = entry.dunkability ?? 5
         hasExtraSeasoning   = entry.extraSeasoning != nil
         extraSeasoning      = entry.extraSeasoning ?? 5
+        extraSeasoningName  = entry.extraSeasoningName ?? ""
         starchiness         = entry.starchiness
         crispyFloppyRatio   = entry.crispyFloppyRatio
         hasCrispyQuality    = entry.crispyQuality != nil
@@ -153,12 +155,13 @@ struct EntryFormView: View {
 
             Toggle("Dunkability", isOn: $data.hasDunkability)
             if data.hasDunkability {
-                RatingSlider(title: "Dunkability", value: $data.dunkability)
+                RatingSlider(title: "Sauce Retention", value: $data.dunkability)
             }
 
             Toggle("Extra Seasoning Present", isOn: $data.hasExtraSeasoning)
             if data.hasExtraSeasoning {
-                RatingSlider(title: "Seasoning Flavor", value: $data.extraSeasoning)
+                RatingSlider(title: "Flavor with Extra Seasoning", value: $data.extraSeasoning)
+                TextField("Seasoning Name", text: $data.extraSeasoningName)
             }
         }
     }
@@ -177,7 +180,7 @@ struct EntryFormView: View {
             Toggle("Crispy Fry Quality", isOn: $data.hasCrispyQuality)
             if data.hasCrispyQuality {
                 SpectrumSlider(
-                    title: "Crispy Quality",
+                    title: "",
                     value: $data.crispyQuality,
                     negativeLabel: "Not Crispy Enough",
                     positiveLabel: "Too Crispy"
@@ -187,7 +190,7 @@ struct EntryFormView: View {
             Toggle("Floppy Fry Quality", isOn: $data.hasFloppyQuality)
             if data.hasFloppyQuality {
                 SpectrumSlider(
-                    title: "Floppy Quality",
+                    title: "",
                     value: $data.floppyQuality,
                     negativeLabel: "Not Floppy Enough",
                     positiveLabel: "Too Floppy"
@@ -232,6 +235,7 @@ struct EntryFormView: View {
         let trimmedName = data.restaurantName.trimmingCharacters(in: .whitespaces)
         let notesValue: String? = data.notes.isEmpty ? nil : data.notes
         let sauceName: String? = data.hasSignatureSauce && !data.signatureSauceName.isEmpty ? data.signatureSauceName : nil
+        let seasoningName: String? = data.hasExtraSeasoning && !data.extraSeasoningName.isEmpty ? data.extraSeasoningName : nil
 
         if let entry = editingEntry {
             entry.restaurantName      = trimmedName
@@ -247,6 +251,7 @@ struct EntryFormView: View {
             entry.signatureSauceName  = sauceName
             entry.dunkability         = data.hasDunkability     ? data.dunkability          : nil
             entry.extraSeasoning      = data.hasExtraSeasoning  ? data.extraSeasoning       : nil
+            entry.extraSeasoningName  = seasoningName
             entry.starchiness         = data.starchiness
             entry.crispyFloppyRatio   = data.crispyFloppyRatio
             entry.crispyQuality       = data.hasCrispyQuality   ? data.crispyQuality        : nil
@@ -267,6 +272,7 @@ struct EntryFormView: View {
                 signatureSauceName:   sauceName,
                 dunkability:          data.hasDunkability     ? data.dunkability          : nil,
                 extraSeasoning:       data.hasExtraSeasoning  ? data.extraSeasoning       : nil,
+                extraSeasoningName:   seasoningName,
                 starchiness:          data.starchiness,
                 crispyFloppyRatio:    data.crispyFloppyRatio,
                 crispyQuality:        data.hasCrispyQuality   ? data.crispyQuality        : nil,

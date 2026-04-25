@@ -56,8 +56,15 @@ struct EntryDetailView: View {
                     ratingRow("Other Sauce Flavor", value: v)
                 }
             }
-            if let v = entry.dunkability    { ratingRow("Dunkability", value: v) }
-            if let v = entry.extraSeasoning { ratingRow("Seasoning Flavor", value: v) }
+            if let v = entry.dunkability { ratingRow("Sauce Retention", value: v) }
+            if let v = entry.extraSeasoning {
+                if let name = entry.extraSeasoningName, !name.isEmpty {
+                    LabeledContent("Extra Seasoning", value: name)
+                    ratingRow("Flavor with \(name)", value: v)
+                } else {
+                    ratingRow("Flavor with Extra Seasoning", value: v)
+                }
+            }
         }
     }
 
