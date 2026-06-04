@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14110b"/><stop offset="0.55" stop-color="#20170b"/><stop offset="1" stop-color="#08090b"/></linearGradient>
+    <linearGradient id="fry" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd36a"/><stop offset="0.5" stop-color="#f6a400"/><stop offset="1" stop-color="#c86b00"/></linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2b2418"/><stop offset="1" stop-color="#17181b"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#000" flood-opacity="0.42"/></filter>
+    <style>
+      .title{font:800 28px 'DejaVu Sans', Arial, sans-serif;fill:#fff8e7;letter-spacing:-0.7px}
+      .sub{font:500 12px 'DejaVu Sans', Arial, sans-serif;fill:#b7aa94}
+      .label{font:700 11px 'DejaVu Sans', Arial, sans-serif;fill:#f5c662;letter-spacing:1.2px}
+      .body{font:600 14px 'DejaVu Sans', Arial, sans-serif;fill:#fff3d0}
+      .muted{font:500 11px 'DejaVu Sans', Arial, sans-serif;fill:#9f9483}
+      .num{font:900 40px 'DejaVu Sans', Arial, sans-serif;fill:#ffd36a}
+      .tiny{font:700 9px 'DejaVu Sans', Arial, sans-serif;fill:#20140a}
+      .chiptext{font:800 11px 'DejaVu Sans', Arial, sans-serif;fill:#281706}
+    </style>
+  </defs>
+  <rect width="390" height="844" rx="34" fill="#050505"/>
+  <rect x="10" y="10" width="370" height="824" rx="28" fill="url(#bg)"/>
+  <rect x="145" y="22" width="100" height="22" rx="11" fill="#050505" opacity=".8"/>
+<text x="28" y="82" class="label">CONCEPT 4</text><text x="28" y="116" class="title">Fry Report Card</text><text x="28" y="138" class="sub">A richer diary/detail view that feels ready for future analytics.</text><rect x="24" y="160" width="342" height="146" rx="24" fill="url(#card)" stroke="#3a2a15" stroke-width="1" filter="url(#shadow)"/>
+<text x="42" y="196" class="title" style="font-size:26px">Boardwalk Stand</text><text x="42" y="220" class="sub">Crinkle cut • Hot • May 26</text><text x="42" y="270" class="label">OVERALL</text><text x="292" y="255" text-anchor="middle" class="num">7.8</text><text x="292" y="277" text-anchor="middle" class="sub">/ 10</text><rect x="24" y="328" width="342" height="244" rx="24" fill="url(#card)" stroke="#3a2a15" stroke-width="1" filter="url(#shadow)"/>
+<text x="42" y="362" class="label">STAT RADAR</text><polygon points="195,392 268,434 238,518 152,518 122,434" fill="none" stroke="#3a3022" stroke-width="2"/><polygon points="195,369 285,421 250,535 140,532 104,421" fill="none" stroke="#2d261b" stroke-width="1"/><polygon points="195,382 254,426 230,500 160,511 132,438" fill="#f6a400" fill-opacity=".28" stroke="#f6a400" stroke-width="3"/><text x="195" y="354" text-anchor="middle" class="muted">Flavor</text><text x="298" y="429" class="muted">Crunch</text><text x="245" y="552" class="muted">Sauce</text><text x="103" y="552" class="muted">Look</text><text x="54" y="429" class="muted">Context</text><rect x="24" y="596" width="342" height="150" rx="24" fill="url(#card)" stroke="#3a2a15" stroke-width="1" filter="url(#shadow)"/>
+<text x="42" y="630" class="label">BADGES EARNED</text><rect x="42" y="650" width="106" height="26" rx="13" fill="#f2a20b"/><text x="95.0" y="667" text-anchor="middle" class="chiptext">CRUNCH KING</text>
+<rect x="158" y="650" width="92" height="26" rx="13" fill="#f2a20b"/><text x="204.0" y="667" text-anchor="middle" class="chiptext">HOT START</text>
+<rect x="258" y="650" width="74" height="26" rx="13" fill="#f2a20b"/><text x="295.0" y="667" text-anchor="middle" class="chiptext">SAUCY</text>
+<text x="42" y="710" class="body">Notes</text><text x="42" y="731" class="sub">Great first bite, but dipped flavor carried the finish.</text></svg>
