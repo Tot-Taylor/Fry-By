@@ -14,33 +14,39 @@ struct SpectrumSlider: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .firstTextBaseline) {
                 Text(title)
                     .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(FryTheme.text)
                 Spacer()
                 Text(currentLabel)
                     .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundStyle(value == 0 ? Color.green : Color.primary)
+                    .fontWeight(.bold)
+                    .foregroundStyle(value == 0 ? FryTheme.success : FryTheme.fryLight)
+                    .multilineTextAlignment(.trailing)
             }
             HStack(spacing: 8) {
                 Text(negativeLabel)
                     .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(FryTheme.mutedText)
                     .frame(width: 70, alignment: .leading)
                     .lineLimit(2)
                     .minimumScaleFactor(0.8)
                 Slider(value: doubleBinding, in: -4...4, step: 1)
+                    .tint(value == 0 ? FryTheme.success : FryTheme.fry)
                 Text(positiveLabel)
                     .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(FryTheme.mutedText)
                     .frame(width: 70, alignment: .trailing)
                     .lineLimit(2)
                     .minimumScaleFactor(0.8)
             }
         }
-        .padding(.vertical, 2)
+        .padding(12)
+        .background(FryTheme.cardElevated.opacity(0.72))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
     private var currentLabel: String {

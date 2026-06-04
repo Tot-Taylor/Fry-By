@@ -1,34 +1,21 @@
-# Fry-By UI Mockup Concepts
+# Fry-By UI Mockup Direction
 
-These are visual-only mockups for choosing a direction before app code changes. They keep the existing log data model in mind: each diary entry has restaurant/context details, fry type, temperature, taste ratings, optional sauce/seasoning fields, texture spectrum values, notes, and a cumulative score out of 10.
-
-## Concept 1: Fry Lab HQ
+The visual direction for the current UI pass is **Concept 1: Fry Lab HQ**.
 
 ![Fry Lab HQ](fry-lab-hq.svg)
 
-A pro dashboard-style landing/list concept with a dark interface, fry-orange telemetry accents, a readiness score, streak ring, one-tap preset chips, and recent log cards. This is the best fit if the app should immediately feel more analytical without adding a new analytics page yet.
+## Selected Direction
 
-## Concept 2: Score Lab Entry
+Fry Lab HQ establishes a dark, pro-analytics design language with a charcoal/black base, warm card surfaces, subtle borders, elevated shadows, and French-fry yellow/orange highlights. The current app implementation should use this look across the existing home, diary list, entry form, entry rows, and entry detail surfaces.
 
-![Score Lab Entry](score-lab-entry.svg)
+## Implementation Guardrails
 
-A redesigned entry flow concept that turns a single diary log into an instrument panel. The emphasis is on dials/sliders, compact context fields, one-tap presets, and a score-aware save button.
+- Do not add new pages for this pass.
+- Do not add new functionality for this pass.
+- Do not change existing visible copy, labels, section names, or control wording for this pass.
+- Keep the existing data model unchanged.
+- Translate the Fry Lab HQ feel into the existing screens through theme colors, card surfaces, score rings, stronger hierarchy, and slider/toggle styling.
 
-## Concept 3: FryQuest Cards
+## Current Scope
 
-![FryQuest Cards](fryquest-cards.svg)
-
-A more playful/gamified entry concept where the user completes stat cards and earns a visible tier preview. This leans into delight while preserving the same rating fields and one-log-at-a-time workflow.
-
-## Concept 4: Fry Report Card
-
-![Fry Report Card](fry-report-card.svg)
-
-A detail/diary concept that presents each log as a report card with an overall score, stat radar, badges, and notes. This can make the existing diary list feel more like an analytics product before a dedicated analytics screen exists.
-
-## Direction Notes
-
-- Shared palette: charcoal/black base, warm brown surfaces, and French-fry orange/yellow highlight colors.
-- Shared tone: pro and analytic-heavy, with light gamification through streaks, badges, tiers, and score previews.
-- No new data model fields are required for these directions; all visible stats can map to the current log data already collected.
-- Recommended next decision: choose one dominant direction for the home/list screen and one dominant direction for the entry form, then translate those into SwiftUI components.
+The other exploratory mockups were removed so the repo now tracks only the selected direction. Future analytics-page planning can still borrow from the Fry Lab HQ dashboard language, but that page is intentionally out of scope for this UI-only pass.

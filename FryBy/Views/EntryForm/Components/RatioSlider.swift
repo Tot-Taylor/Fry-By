@@ -24,28 +24,34 @@ struct RatioSlider: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .firstTextBaseline) {
                 Text("Crispy to Floppy Ratio")
                     .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(FryTheme.text)
                 Spacer()
                 Text(Self.labels[value] ?? "Even Split")
                     .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundStyle(.primary)
+                    .fontWeight(.bold)
+                    .foregroundStyle(FryTheme.fryLight)
+                    .multilineTextAlignment(.trailing)
             }
             HStack(spacing: 8) {
                 Text("All Crispy")
                     .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(FryTheme.mutedText)
                     .frame(width: 58, alignment: .leading)
                 Slider(value: doubleBinding, in: -4...4, step: 1)
+                    .tint(FryTheme.fry)
                 Text("All Floppy")
                     .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(FryTheme.mutedText)
                     .frame(width: 58, alignment: .trailing)
             }
         }
-        .padding(.vertical, 2)
+        .padding(12)
+        .background(FryTheme.cardElevated.opacity(0.72))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 }

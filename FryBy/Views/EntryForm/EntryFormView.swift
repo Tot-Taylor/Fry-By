@@ -96,15 +96,22 @@ struct EntryFormView: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                basicInfoSection
-                flavorSection
-                textureSection
-                contextSection
-                notesSection
+            ScrollView {
+                VStack(spacing: 18) {
+                    basicInfoSection
+                    flavorSection
+                    textureSection
+                    contextSection
+                    notesSection
+                }
+                .padding(16)
             }
+            .scrollContentBackground(.hidden)
+            .fryBackground()
             .navigationTitle(editingEntry == nil ? "New Entry" : "Edit Entry")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(FryTheme.backgroundGlow, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
@@ -115,18 +122,29 @@ struct EntryFormView: View {
                 }
             }
         }
+        .tint(FryTheme.fry)
     }
 
     // MARK: - Sections
 
     private var basicInfoSection: some View {
-        Section("Restaurant") {
+        FrySectionCard(title: "Restaurant") {
             TextField("Restaurant Name", text: $data.restaurantName)
+                .textFieldStyle(.plain)
+                .padding(12)
+                .background(FryTheme.cardElevated)
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+
+            FryDivider()
+
             DatePicker(
                 "Date & Time",
                 selection: $data.date,
                 displayedComponents: [.date, .hourAndMinute]
             )
+
+            FryDivider()
+
             Picker("Fry Type", selection: $data.fryType) {
                 ForEach(FryType.allCases, id: \.self) { type in
                     Text(type.rawValue).tag(type)
@@ -136,13 +154,17 @@ struct EntryFormView: View {
     }
 
     private var flavorSection: some View {
-        Section("Flavor") {
+        FrySectionCard(title: "Flavor") {
             RatingSlider(title: "Undipped Flavor", value: $data.undippedFlavor)
+
+            FryDivider()
 
             Toggle("Dipped in Ketchup", isOn: $data.hasKetchupFlavor)
             if data.hasKetchupFlavor {
                 RatingSlider(title: "Flavor in Ketchup", value: $data.ketchupFlavor)
             }
+
+            FryDivider()
 
             Toggle("Dipped in Other Sauce", isOn: $data.hasSignatureSauce)
             if data.hasSignatureSauce {
@@ -151,23 +173,35 @@ struct EntryFormView: View {
                     value: $data.signatureSauceFlavor
                 )
                 TextField("Other Sauce Name", text: $data.signatureSauceName)
+                    .textFieldStyle(.plain)
+                    .padding(12)
+                    .background(FryTheme.cardElevated)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             }
+
+            FryDivider()
 
             Toggle("Dunkability", isOn: $data.hasDunkability)
             if data.hasDunkability {
                 RatingSlider(title: "Sauce Retention", value: $data.dunkability)
             }
 
+            FryDivider()
+
             Toggle("Extra Seasoning Present", isOn: $data.hasExtraSeasoning)
             if data.hasExtraSeasoning {
                 RatingSlider(title: "Flavor with Extra Seasoning", value: $data.extraSeasoning)
                 TextField("Seasoning Name", text: $data.extraSeasoningName)
+                    .textFieldStyle(.plain)
+                    .padding(12)
+                    .background(FryTheme.cardElevated)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             }
         }
     }
 
     private var textureSection: some View {
-        Section("Texture") {
+        FrySectionCard(title: "Texture") {
             SpectrumSlider(
                 title: "Starchiness",
                 value: $data.starchiness,
@@ -175,7 +209,11 @@ struct EntryFormView: View {
                 positiveLabel: "Too Starchy"
             )
 
+            FryDivider()
+
             RatioSlider(value: $data.crispyFloppyRatio)
+
+            FryDivider()
 
             Toggle("Crispy Fry Quality", isOn: $data.hasCrispyQuality)
             if data.hasCrispyQuality {
@@ -186,6 +224,8 @@ struct EntryFormView: View {
                     positiveLabel: "Too Crispy"
                 )
             }
+
+            FryDivider()
 
             Toggle("Floppy Fry Quality", isOn: $data.hasFloppyQuality)
             if data.hasFloppyQuality {
@@ -200,18 +240,24 @@ struct EntryFormView: View {
     }
 
     private var contextSection: some View {
-        Section("Context") {
+        FrySectionCard(title: "Context") {
             Picker("Temperature", selection: $data.temperature) {
                 ForEach(FryTemperature.allCases, id: \.self) { temp in
                     Text(temp.rawValue).tag(temp)
                 }
             }
+
+            FryDivider()
+
             RatingSlider(
                 title: "Hunger Level",
                 value: $data.hungerLevel,
                 leftLabel: "Full",
                 rightLabel: "Starving"
             )
+
+            FryDivider()
+
             RatingSlider(
                 title: "Appearance",
                 value: $data.appearance,
@@ -222,9 +268,13 @@ struct EntryFormView: View {
     }
 
     private var notesSection: some View {
-        Section("Notes") {
+        FrySectionCard(title: "Notes") {
             TextField("Optional notes...", text: $data.notes, axis: .vertical)
+                .textFieldStyle(.plain)
                 .lineLimit(3...6)
+                .padding(12)
+                .background(FryTheme.cardElevated)
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
     }
 
