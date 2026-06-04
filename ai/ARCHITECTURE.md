@@ -36,6 +36,8 @@ User Input (EntryFormView)
 ## FOLDER STRUCTURE
 
 ```
+FryBy.xcodeproj/
+└── project.pbxproj       — committed Xcode project for simulator/device builds
 FryBy/
 ├── FryByApp.swift
 ├── Models/
@@ -46,6 +48,7 @@ FryBy/
 │   ├── ScoringStrategy.swift   — Protocol, FryRatingInput, FryScorer entrypoint
 │   └── DefaultFryScorer.swift  — Current algorithm (provisional weights)
 └── Views/
+    ├── FryTheme.swift          — shared Fry Lab HQ visual styling
     ├── Home/
     │   └── HomeView.swift
     ├── EntryList/
