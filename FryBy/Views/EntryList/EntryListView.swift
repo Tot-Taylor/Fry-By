@@ -38,6 +38,8 @@ struct EntryListView: View {
             if selectedTab == .diary {
                 ToolbarItem(placement: .navigationBarLeading) {
                     EditButton()
+                        .foregroundStyle(FryTheme.fry)
+                        .tint(FryTheme.fry)
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button {
