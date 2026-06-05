@@ -1,3 +1,4 @@
+import Charts
 import SwiftUI
 
 struct AnalyticsView: View {
@@ -18,20 +19,22 @@ struct AnalyticsView: View {
                     analyticsEmptyState(
                         title: "No Fry Entries Yet",
                         systemImage: "chart.bar.doc.horizontal",
-                        message: "Log your first fry rating to unlock trends, rankings, and map-ready insights."
+                        message: "Log your first fry rating to unlock score, volume, and restaurant analytics."
                     )
                 } else if filteredEntries.isEmpty {
                     analyticsEmptyState(
                         title: "No Entries Match Filters",
                         systemImage: "line.3.horizontal.decrease.circle",
-                        message: "Adjust your diary search to include more restaurants in these analytics."
+                        message: "Adjust the shared filters to include more restaurants in these analytics."
                     )
                 } else {
                     summaryMetricsGrid
-                    scoreTrendCard
+                    scoreOverTimeCard
+                    scoreDistributionCard
+                    countByMonthCard
                     topRestaurantsCard
-                    fryTypeBreakdownCard
-                    mapPreparationCard
+                    averageScoreByRestaurantCard
+                    countByRestaurantCard
                 }
             }
             .padding(16)
@@ -46,7 +49,7 @@ struct AnalyticsView: View {
                 .font(.title.bold())
                 .foregroundStyle(FryTheme.text)
 
-            Text("A summary framework for fry trends, chart cards, and future location-based insights.")
+            Text(isFiltering ? "Charts are using the current shared filters." : "Score and entry-volume charts across every logged fry rating.")
                 .font(.subheadline)
                 .foregroundStyle(FryTheme.mutedText)
         }
@@ -87,34 +90,58 @@ struct AnalyticsView: View {
         }
     }
 
-    private var scoreTrendCard: some View {
+    private var scoreOverTimeCard: some View {
         AnalyticsChartCard(
-            title: "Score Trend",
-            subtitle: "Ready for a future line chart of scores over time.",
+            title: "Score Over Time",
+            subtitle: "Overall scores ordered by entry date.",
             systemImage: "chart.xyaxis.line"
         ) {
             if summary.scoreTrendPoints.count < 2 {
                 AnalyticsMissingDataView(
                     title: "Missing Trend Data",
-                    message: "Add at least two fry entries to compare scores over time."
+                    message: "Add at least two filtered fry entries to compare scores over time."
                 )
             } else {
-                VStack(alignment: .leading, spacing: 10) {
-                    ForEach(summary.scoreTrendPoints.prefix(5)) { point in
-                        AnalyticsProgressRow(
-                            label: point.label,
-                            valueText: String(format: "%.1f", point.score),
-                            fraction: point.score / 10,
-                            tint: FryTheme.scoreColor(point.score)
-                        )
-                    }
+                ScoreOverTimeChart(points: summary.scoreTrendPoints)
+            }
+        }
+    }
 
-                    if summary.scoreTrendPoints.count > 5 {
-                        Text("+ \(summary.scoreTrendPoints.count - 5) more points ready for charting")
-                            .font(.caption)
-                            .foregroundStyle(FryTheme.mutedText)
-                    }
-                }
+    private var scoreDistributionCard: some View {
+        AnalyticsChartCard(
+            title: "Score Distribution",
+            subtitle: "Entry counts grouped into two-point score buckets.",
+            systemImage: "chart.bar"
+        ) {
+            if summary.scoreDistribution.isEmpty {
+                AnalyticsMissingDataView(
+                    title: "Missing Score Data",
+                    message: "Scores will appear here as soon as entries are available."
+                )
+            } else {
+                CountBarChart(
+                    items: summary.scoreDistribution.map { CountChartItem(label: $0.label, count: $0.count) },
+                    xTitle: "Score Range",
+                    yTitle: "Entries",
+                    horizontal: false
+                )
+            }
+        }
+    }
+
+    private var countByMonthCard: some View {
+        AnalyticsChartCard(
+            title: "Count by Month",
+            subtitle: "Monthly entry volume from the selected data set.",
+            systemImage: "calendar"
+        ) {
+            if summary.monthlyEntryCounts.isEmpty {
+                AnalyticsMissingDataView(
+                    title: "Missing Date Data",
+                    message: "Entry volume will appear once dated entries match the filters."
+                )
+            } else {
+                MonthlyCountChart(items: summary.monthlyEntryCounts)
             }
         }
     }
@@ -122,22 +149,23 @@ struct AnalyticsView: View {
     private var topRestaurantsCard: some View {
         AnalyticsChartCard(
             title: "Top Restaurants",
-            subtitle: "Prepared for ranked bar chart visualization.",
+            subtitle: "Highest-scoring restaurant visits in the current selection.",
             systemImage: "list.number"
         ) {
-            if summary.topRestaurants.isEmpty {
+            if summary.topRestaurantVisits.isEmpty {
                 AnalyticsMissingDataView(
                     title: "Missing Restaurant Data",
-                    message: "Restaurant rankings will appear once entries include scores."
+                    message: "Restaurant rankings will appear once filtered entries include scores."
                 )
             } else {
                 VStack(spacing: 10) {
-                    ForEach(summary.topRestaurants) { restaurant in
+                    ForEach(summary.topRestaurantVisits) { visit in
                         AnalyticsProgressRow(
-                            label: restaurant.name,
-                            valueText: String(format: "%.1f", restaurant.averageScore),
-                            fraction: restaurant.averageScore / 10,
-                            tint: FryTheme.scoreColor(restaurant.averageScore)
+                            label: visit.restaurantName,
+                            valueText: String(format: "%.1f", visit.score),
+                            fraction: visit.score / 10,
+                            tint: FryTheme.scoreColor(visit.score),
+                            caption: visit.dateLabel
                         )
                     }
                 }
@@ -145,67 +173,49 @@ struct AnalyticsView: View {
         }
     }
 
-    private var fryTypeBreakdownCard: some View {
+    private var averageScoreByRestaurantCard: some View {
         AnalyticsChartCard(
-            title: "Fry Type Breakdown",
-            subtitle: "Counts are grouped for a future donut or bar chart.",
-            systemImage: "chart.pie"
+            title: "Average Score by Restaurant",
+            subtitle: "Average score for restaurants represented by the active filters.",
+            systemImage: "chart.bar.xaxis"
         ) {
-            if summary.fryTypeBreakdown.isEmpty {
+            if summary.restaurantScoreSummaries.isEmpty {
                 AnalyticsMissingDataView(
-                    title: "Missing Fry Type Data",
-                    message: "Choose fry types on entries to build this breakdown."
+                    title: "Missing Restaurant Data",
+                    message: "Average scores need at least one scored restaurant entry."
                 )
             } else {
-                VStack(spacing: 10) {
-                    ForEach(summary.fryTypeBreakdown) { item in
-                        AnalyticsProgressRow(
-                            label: item.type.rawValue,
-                            valueText: "\(item.count)",
-                            fraction: Double(item.count) / Double(max(summary.entryCount, 1)),
-                            tint: FryTheme.fryLight
-                        )
-                    }
-                }
+                RestaurantMetricChart(
+                    items: summary.restaurantScoreSummaries.map {
+                        RestaurantMetricItem(name: $0.name, value: $0.averageScore, annotation: String(format: "%.1f", $0.averageScore))
+                    },
+                    valueTitle: "Average Score",
+                    valueDomain: 0...10,
+                    tintForValue: FryTheme.scoreColor
+                )
             }
         }
     }
 
-    private var mapPreparationCard: some View {
+    private var countByRestaurantCard: some View {
         AnalyticsChartCard(
-            title: "Map Insights",
-            subtitle: "Reserved for a future interactive map ticket.",
-            systemImage: "map"
+            title: "Count by Restaurant",
+            subtitle: "Entry volume ranked by restaurant.",
+            systemImage: "chart.bar.doc.horizontal"
         ) {
-            VStack(alignment: .leading, spacing: 12) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .fill(FryTheme.cardElevated.opacity(0.8))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                .stroke(style: StrokeStyle(lineWidth: 1, dash: [6, 6]))
-                                .foregroundStyle(FryTheme.cardStroke.opacity(0.9))
-                        )
-                        .frame(height: 150)
-
-                    VStack(spacing: 8) {
-                        Image(systemName: "mappin.and.ellipse")
-                            .font(.title2.weight(.semibold))
-                            .foregroundStyle(FryTheme.fry)
-                        Text("Interactive map placeholder")
-                            .font(.headline)
-                            .foregroundStyle(FryTheme.text)
-                        Text("Location fields and map rendering are intentionally not implemented yet.")
-                            .font(.caption)
-                            .multilineTextAlignment(.center)
-                            .foregroundStyle(FryTheme.mutedText)
-                            .padding(.horizontal)
-                    }
-                }
-
+            if summary.restaurantCountSummaries.isEmpty {
                 AnalyticsMissingDataView(
-                    title: "Missing Location Data",
-                    message: "Future map cards can consume geocoded restaurant locations when that data exists."
+                    title: "Missing Restaurant Data",
+                    message: "Restaurant counts need at least one entry matching the filters."
+                )
+            } else {
+                RestaurantMetricChart(
+                    items: summary.restaurantCountSummaries.map {
+                        RestaurantMetricItem(name: $0.name, value: Double($0.entryCount), annotation: "\($0.entryCount)")
+                    },
+                    valueTitle: "Entries",
+                    valueDomain: 0...Double(max(summary.maxRestaurantEntryCount, 1)),
+                    tintForValue: { _ in FryTheme.fryLight }
                 )
             }
         }
@@ -246,7 +256,7 @@ private struct FryAnalyticsSummary {
     }
 
     var bestRestaurantName: String? {
-        bestEntry?.restaurantName
+        bestEntry.map { Self.restaurantName(for: $0) }
     }
 
     var favoriteFryTypeText: String {
@@ -268,31 +278,84 @@ private struct FryAnalyticsSummary {
             .map { entry in
                 ScoreTrendPoint(
                     id: entry.id,
-                    label: Self.shortDateFormatter.string(from: entry.date),
+                    date: entry.date,
                     score: entry.overallScore
                 )
             }
     }
 
-    var topRestaurants: [RestaurantScoreSummary] {
-        let groupedEntries = Dictionary(grouping: entries) { $0.restaurantName }
-
-        return groupedEntries.map { name, restaurantEntries in
-            let totalScore = restaurantEntries.map(\.overallScore).reduce(0, +)
-            return RestaurantScoreSummary(
-                name: name,
-                averageScore: totalScore / Double(restaurantEntries.count),
-                entryCount: restaurantEntries.count
+    var scoreDistribution: [ScoreDistributionBucket] {
+        let ranges = stride(from: 0, through: 8, by: 2).map { lowerBound in
+            ScoreDistributionBucket(
+                lowerBound: Double(lowerBound),
+                upperBound: Double(lowerBound + 2),
+                count: entries.filter { entry in
+                    let score = min(max(entry.overallScore, 0), 10)
+                    if lowerBound == 8 {
+                        return score >= Double(lowerBound) && score <= 10
+                    }
+                    return score >= Double(lowerBound) && score < Double(lowerBound + 2)
+                }.count
             )
         }
-        .sorted {
+
+        return ranges.filter { $0.count > 0 }
+    }
+
+    var monthlyEntryCounts: [MonthlyEntryCount] {
+        let groupedEntries = Dictionary(grouping: entries) { entry in
+            Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: entry.date)) ?? entry.date
+        }
+
+        return groupedEntries.map { month, monthEntries in
+            MonthlyEntryCount(month: month, count: monthEntries.count)
+        }
+        .sorted { $0.month < $1.month }
+    }
+
+    var topRestaurantVisits: [TopRestaurantVisit] {
+        entries
+            .sorted {
+                if $0.overallScore == $1.overallScore {
+                    return $0.date > $1.date
+                }
+                return $0.overallScore > $1.overallScore
+            }
+            .prefix(5)
+            .map { entry in
+                TopRestaurantVisit(
+                    id: entry.id,
+                    restaurantName: Self.restaurantName(for: entry),
+                    score: entry.overallScore,
+                    dateLabel: Self.shortDateFormatter.string(from: entry.date)
+                )
+            }
+    }
+
+    var restaurantScoreSummaries: [RestaurantScoreSummary] {
+        restaurantSummaries.sorted {
             if $0.averageScore == $1.averageScore {
                 return $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
             }
             return $0.averageScore > $1.averageScore
         }
-        .prefix(5)
+        .prefix(6)
         .map { $0 }
+    }
+
+    var restaurantCountSummaries: [RestaurantScoreSummary] {
+        restaurantSummaries.sorted {
+            if $0.entryCount == $1.entryCount {
+                return $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
+            }
+            return $0.entryCount > $1.entryCount
+        }
+        .prefix(6)
+        .map { $0 }
+    }
+
+    var maxRestaurantEntryCount: Int {
+        restaurantCountSummaries.map(\.entryCount).max() ?? 0
     }
 
     var fryTypeBreakdown: [FryTypeBreakdownItem] {
@@ -309,6 +372,25 @@ private struct FryAnalyticsSummary {
         }
     }
 
+    private var restaurantSummaries: [RestaurantScoreSummary] {
+        let groupedEntries = Dictionary(grouping: entries) { Self.restaurantName(for: $0) }
+
+        return groupedEntries.compactMap { name, restaurantEntries in
+            guard !restaurantEntries.isEmpty else { return nil }
+            let totalScore = restaurantEntries.map(\.overallScore).reduce(0, +)
+            return RestaurantScoreSummary(
+                name: name,
+                averageScore: totalScore / Double(restaurantEntries.count),
+                entryCount: restaurantEntries.count
+            )
+        }
+    }
+
+    private static func restaurantName(for entry: FryEntry) -> String {
+        let trimmedName = entry.restaurantName.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmedName.isEmpty ? "Unknown Restaurant" : trimmedName
+    }
+
     private static let shortDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
@@ -319,8 +401,35 @@ private struct FryAnalyticsSummary {
 
 private struct ScoreTrendPoint: Identifiable {
     let id: UUID
-    let label: String
+    let date: Date
     let score: Double
+}
+
+private struct ScoreDistributionBucket: Identifiable {
+    var id: String { label }
+    let lowerBound: Double
+    let upperBound: Double
+    let count: Int
+
+    var label: String {
+        if upperBound == 10 {
+            return "8–10"
+        }
+        return String(format: "%.0f–%.0f", lowerBound, upperBound)
+    }
+}
+
+private struct MonthlyEntryCount: Identifiable {
+    var id: Date { month }
+    let month: Date
+    let count: Int
+}
+
+private struct TopRestaurantVisit: Identifiable {
+    let id: UUID
+    let restaurantName: String
+    let score: Double
+    let dateLabel: String
 }
 
 private struct RestaurantScoreSummary: Identifiable {
@@ -328,6 +437,19 @@ private struct RestaurantScoreSummary: Identifiable {
     let name: String
     let averageScore: Double
     let entryCount: Int
+}
+
+private struct RestaurantMetricItem: Identifiable {
+    var id: String { name }
+    let name: String
+    let value: Double
+    let annotation: String
+}
+
+private struct CountChartItem: Identifiable {
+    var id: String { label }
+    let label: String
+    let count: Int
 }
 
 private struct FryTypeBreakdownItem: Identifiable {
@@ -408,19 +530,126 @@ private struct AnalyticsChartCard<Content: View>: View {
     }
 }
 
+private struct ScoreOverTimeChart: View {
+    let points: [ScoreTrendPoint]
+
+    var body: some View {
+        Chart(points) { point in
+            LineMark(
+                x: .value("Date", point.date),
+                y: .value("Score", point.score)
+            )
+            .interpolationMethod(.catmullRom)
+            .foregroundStyle(FryTheme.fry)
+
+            PointMark(
+                x: .value("Date", point.date),
+                y: .value("Score", point.score)
+            )
+            .foregroundStyle(FryTheme.fryLight)
+            .symbolSize(48)
+        }
+        .chartYScale(domain: 0...10)
+        .chartYAxis { analyticsYAxisMarks() }
+        .chartXAxis { analyticsXAxisMarks() }
+        .frame(height: 220)
+    }
+}
+
+private struct CountBarChart: View {
+    let items: [CountChartItem]
+    let xTitle: String
+    let yTitle: String
+    let horizontal: Bool
+
+    var body: some View {
+        Chart(items) { item in
+            if horizontal {
+                BarMark(
+                    x: .value(yTitle, item.count),
+                    y: .value(xTitle, item.label)
+                )
+                .foregroundStyle(FryTheme.fry)
+            } else {
+                BarMark(
+                    x: .value(xTitle, item.label),
+                    y: .value(yTitle, item.count)
+                )
+                .foregroundStyle(FryTheme.fry)
+            }
+        }
+        .chartYAxis { analyticsYAxisMarks() }
+        .chartXAxis { analyticsXAxisMarks() }
+        .frame(height: 220)
+    }
+}
+
+private struct MonthlyCountChart: View {
+    let items: [MonthlyEntryCount]
+
+    var body: some View {
+        Chart(items) { item in
+            BarMark(
+                x: .value("Month", item.month, unit: .month),
+                y: .value("Entries", item.count)
+            )
+            .foregroundStyle(FryTheme.fryLight)
+        }
+        .chartYAxis { analyticsYAxisMarks() }
+        .chartXAxis { analyticsXAxisMarks() }
+        .frame(height: 220)
+    }
+}
+
+private struct RestaurantMetricChart: View {
+    let items: [RestaurantMetricItem]
+    let valueTitle: String
+    let valueDomain: ClosedRange<Double>
+    let tintForValue: (Double) -> Color
+
+    var body: some View {
+        Chart(items) { item in
+            BarMark(
+                x: .value(valueTitle, item.value),
+                y: .value("Restaurant", item.name)
+            )
+            .foregroundStyle(tintForValue(item.value))
+            .annotation(position: .trailing, alignment: .leading) {
+                Text(item.annotation)
+                    .font(.caption2.weight(.bold))
+                    .foregroundStyle(FryTheme.text)
+                    .monospacedDigit()
+            }
+        }
+        .chartXScale(domain: valueDomain)
+        .chartYAxis { analyticsYAxisMarks() }
+        .chartXAxis { analyticsXAxisMarks() }
+        .frame(height: max(180, CGFloat(items.count) * 44))
+    }
+}
+
 private struct AnalyticsProgressRow: View {
     let label: String
     let valueText: String
     let fraction: Double
     let tint: Color
+    var caption: String? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Text(label)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(FryTheme.text)
-                    .lineLimit(1)
+            HStack(alignment: .firstTextBaseline) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(label)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(FryTheme.text)
+                        .lineLimit(1)
+
+                    if let caption {
+                        Text(caption)
+                            .font(.caption2)
+                            .foregroundStyle(FryTheme.mutedText)
+                    }
+                }
                 Spacer()
                 Text(valueText)
                     .font(.caption.weight(.bold))
@@ -465,5 +694,29 @@ private struct AnalyticsMissingDataView: View {
         .padding(12)
         .background(FryTheme.cardElevated.opacity(0.75))
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+}
+
+@AxisContentBuilder
+private func analyticsXAxisMarks() -> some AxisContent {
+    AxisMarks { _ in
+        AxisGridLine()
+            .foregroundStyle(FryTheme.cardStroke.opacity(0.45))
+        AxisTick()
+            .foregroundStyle(FryTheme.cardStroke.opacity(0.8))
+        AxisValueLabel()
+            .foregroundStyle(FryTheme.mutedText)
+    }
+}
+
+@AxisContentBuilder
+private func analyticsYAxisMarks() -> some AxisContent {
+    AxisMarks { _ in
+        AxisGridLine()
+            .foregroundStyle(FryTheme.cardStroke.opacity(0.45))
+        AxisTick()
+            .foregroundStyle(FryTheme.cardStroke.opacity(0.8))
+        AxisValueLabel()
+            .foregroundStyle(FryTheme.mutedText)
     }
 }
