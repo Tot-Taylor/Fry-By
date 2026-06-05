@@ -129,11 +129,17 @@ struct EntryFormView: View {
 
     private var basicInfoSection: some View {
         FrySectionCard(title: "Restaurant") {
-            TextField("Restaurant Name", text: $data.restaurantName)
-                .textFieldStyle(.plain)
-                .padding(12)
-                .background(FryTheme.cardElevated)
-                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            TextField(
+                "Restaurant Name",
+                text: $data.restaurantName,
+                prompt: Text("Restaurant Name").foregroundStyle(FryTheme.mutedText)
+            )
+            .textFieldStyle(.plain)
+            .foregroundStyle(FryTheme.text)
+            .tint(FryTheme.fryLight)
+            .padding(12)
+            .background(FryTheme.cardElevated)
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 
             FryDivider()
 
@@ -142,6 +148,12 @@ struct EntryFormView: View {
                 selection: $data.date,
                 displayedComponents: [.date, .hourAndMinute]
             )
+            .foregroundStyle(FryTheme.text)
+            .tint(FryTheme.fryLight)
+            .colorScheme(.dark)
+            .padding(12)
+            .background(FryTheme.cardElevated)
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 
             FryDivider()
 
@@ -150,6 +162,9 @@ struct EntryFormView: View {
                     Text(type.rawValue).tag(type)
                 }
             }
+            .foregroundStyle(FryTheme.text)
+            .tint(FryTheme.fryLight)
+            .colorScheme(.dark)
         }
     }
 
@@ -172,11 +187,17 @@ struct EntryFormView: View {
                     title: data.signatureSauceName.isEmpty ? "Flavor in Other Sauce" : "Flavor in \(data.signatureSauceName)",
                     value: $data.signatureSauceFlavor
                 )
-                TextField("Other Sauce Name", text: $data.signatureSauceName)
-                    .textFieldStyle(.plain)
-                    .padding(12)
-                    .background(FryTheme.cardElevated)
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                TextField(
+                    "Other Sauce Name",
+                    text: $data.signatureSauceName,
+                    prompt: Text("Other Sauce Name").foregroundStyle(FryTheme.mutedText)
+                )
+                .textFieldStyle(.plain)
+                .foregroundStyle(FryTheme.text)
+                .tint(FryTheme.fryLight)
+                .padding(12)
+                .background(FryTheme.cardElevated)
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             }
 
             FryDivider()
@@ -191,11 +212,17 @@ struct EntryFormView: View {
             Toggle("Extra Seasoning Present", isOn: $data.hasExtraSeasoning)
             if data.hasExtraSeasoning {
                 RatingSlider(title: "Flavor with Extra Seasoning", value: $data.extraSeasoning)
-                TextField("Seasoning Name", text: $data.extraSeasoningName)
-                    .textFieldStyle(.plain)
-                    .padding(12)
-                    .background(FryTheme.cardElevated)
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                TextField(
+                    "Seasoning Name",
+                    text: $data.extraSeasoningName,
+                    prompt: Text("Seasoning Name").foregroundStyle(FryTheme.mutedText)
+                )
+                .textFieldStyle(.plain)
+                .foregroundStyle(FryTheme.text)
+                .tint(FryTheme.fryLight)
+                .padding(12)
+                .background(FryTheme.cardElevated)
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             }
         }
     }
@@ -241,11 +268,27 @@ struct EntryFormView: View {
 
     private var contextSection: some View {
         FrySectionCard(title: "Context") {
-            Picker("Temperature", selection: $data.temperature) {
-                ForEach(FryTemperature.allCases, id: \.self) { temp in
-                    Text(temp.rawValue).tag(temp)
+            HStack {
+                Text("Temperature")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(FryTheme.text)
+
+                Spacer()
+
+                Picker("Temperature", selection: $data.temperature) {
+                    ForEach(FryTemperature.allCases, id: \.self) { temp in
+                        Text(temp.rawValue).tag(temp)
+                    }
                 }
+                .labelsHidden()
+                .foregroundStyle(FryTheme.text)
+                .tint(FryTheme.fryLight)
+                .colorScheme(.dark)
             }
+            .padding(12)
+            .background(FryTheme.cardElevated)
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 
             FryDivider()
 
@@ -269,12 +312,19 @@ struct EntryFormView: View {
 
     private var notesSection: some View {
         FrySectionCard(title: "Notes") {
-            TextField("Optional notes...", text: $data.notes, axis: .vertical)
-                .textFieldStyle(.plain)
-                .lineLimit(3...6)
-                .padding(12)
-                .background(FryTheme.cardElevated)
-                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            TextField(
+                "Optional notes...",
+                text: $data.notes,
+                prompt: Text("Optional notes...").foregroundStyle(FryTheme.mutedText),
+                axis: .vertical
+            )
+            .textFieldStyle(.plain)
+            .foregroundStyle(FryTheme.text)
+            .tint(FryTheme.fryLight)
+            .lineLimit(3...6)
+            .padding(12)
+            .background(FryTheme.cardElevated)
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
     }
 

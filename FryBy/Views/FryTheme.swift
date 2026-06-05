@@ -52,6 +52,7 @@ struct FryBackground: ViewModifier {
     func body(content: Content) -> some View {
         content
             .background(FryTheme.backgroundGradient.ignoresSafeArea())
+            .environment(\.colorScheme, .dark)
             .foregroundStyle(FryTheme.text)
             .tint(FryTheme.fry)
     }
