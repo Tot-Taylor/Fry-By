@@ -5,6 +5,7 @@ struct EntryListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \FryEntry.date, order: .reverse) private var entries: [FryEntry]
 
+    @State private var selectedTab: FryLogTab = .diary
     @State private var showingNewEntry = false
     @State private var searchText = ""
 
@@ -16,6 +17,45 @@ struct EntryListView: View {
     }
 
     var body: some View {
+        Group {
+            switch selectedTab {
+            case .diary:
+                diaryList
+            case .analytics:
+                AnalyticsPlaceholderView()
+            }
+        }
+        .background(FryTheme.backgroundGradient.ignoresSafeArea())
+        .navigationTitle("Fry Log")
+        .toolbarBackground(FryTheme.backgroundGlow, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
+        .tint(FryTheme.fry)
+        .diarySearchable(when: selectedTab == .diary, text: $searchText)
+        .safeAreaInset(edge: .top, spacing: 0) {
+            tabSwitcher
+        }
+        .toolbar {
+            if selectedTab == .diary {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    EditButton()
+                        .foregroundStyle(FryTheme.fry)
+                        .tint(FryTheme.fry)
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showingNewEntry = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $showingNewEntry) {
+            EntryFormView()
+        }
+    }
+
+    private var diaryList: some View {
         List {
             if entries.isEmpty {
                 ContentUnavailableView(
@@ -39,32 +79,96 @@ struct EntryListView: View {
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
-        .background(FryTheme.backgroundGradient.ignoresSafeArea())
-        .navigationTitle("Fry Log")
-        .toolbarBackground(FryTheme.backgroundGlow, for: .navigationBar)
-        .toolbarColorScheme(.dark, for: .navigationBar)
-        .tint(FryTheme.fry)
-        .searchable(text: $searchText, prompt: "Filter by restaurant")
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                EditButton()
-            }
-            ToolbarItem(placement: .primaryAction) {
-                Button {
-                    showingNewEntry = true
-                } label: {
-                    Image(systemName: "plus")
-                }
+    }
+
+    private var tabSwitcher: some View {
+        Picker("Fry log section", selection: $selectedTab) {
+            ForEach(FryLogTab.allCases) { tab in
+                Label(tab.title, systemImage: tab.systemImage)
+                    .tag(tab)
             }
         }
-        .sheet(isPresented: $showingNewEntry) {
-            EntryFormView()
+        .pickerStyle(.segmented)
+        .padding(.horizontal, 16)
+        .padding(.top, 8)
+        .padding(.bottom, 12)
+        .background {
+            Rectangle()
+                .fill(FryTheme.backgroundGlow)
+                .overlay {
+                    Rectangle()
+                        .fill(.ultraThinMaterial)
+                }
+                .ignoresSafeArea(edges: .top)
         }
     }
 
     private func deleteEntries(at offsets: IndexSet) {
         for index in offsets {
             modelContext.delete(filteredEntries[index])
+        }
+    }
+}
+
+private enum FryLogTab: String, CaseIterable, Identifiable {
+    case diary
+    case analytics
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .diary:
+            "Diary"
+        case .analytics:
+            "Analytics"
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .diary:
+            "book.pages"
+        case .analytics:
+            "chart.bar.xaxis"
+        }
+    }
+}
+
+private struct AnalyticsPlaceholderView: View {
+    var body: some View {
+        VStack(spacing: 16) {
+            Spacer()
+
+            Image(systemName: "chart.bar.xaxis")
+                .font(.system(size: 52, weight: .semibold))
+                .foregroundStyle(FryTheme.fry)
+                .shadow(color: FryTheme.fry.opacity(0.35), radius: 18, x: 0, y: 8)
+
+            VStack(spacing: 8) {
+                Text("Analytics")
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(FryTheme.text)
+                Text("Your fry insights will live here soon.")
+                    .font(.subheadline)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(FryTheme.mutedText)
+            }
+
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(24)
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func diarySearchable(when isEnabled: Bool, text: Binding<String>) -> some View {
+        if isEnabled {
+            searchable(text: text, prompt: "Filter by restaurant")
+        } else {
+            self
         }
     }
 }
