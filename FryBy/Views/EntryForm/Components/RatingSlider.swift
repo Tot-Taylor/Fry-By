@@ -14,44 +14,39 @@ struct RatingSlider: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text(title)
                     .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(FryTheme.text)
                 Spacer()
                 Text("\(value) / 10")
                     .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(ratingColor(value))
+                    .fontWeight(.black)
+                    .foregroundStyle(FryTheme.ratingColor(value))
                     .monospacedDigit()
             }
             if leftLabel != nil || rightLabel != nil {
                 HStack(spacing: 8) {
                     Text(leftLabel ?? "")
                         .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(FryTheme.mutedText)
                         .frame(width: 58, alignment: .leading)
                     Slider(value: doubleBinding, in: 1...10, step: 1)
-                        .tint(ratingColor(value))
+                        .tint(FryTheme.ratingColor(value))
                     Text(rightLabel ?? "")
                         .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(FryTheme.mutedText)
                         .frame(width: 58, alignment: .trailing)
                 }
             } else {
                 Slider(value: doubleBinding, in: 1...10, step: 1)
-                    .tint(ratingColor(value))
+                    .tint(FryTheme.ratingColor(value))
             }
         }
-        .padding(.vertical, 2)
-    }
-
-    private func ratingColor(_ v: Int) -> Color {
-        switch v {
-        case 8...10: return .green
-        case 5..<8:  return .yellow
-        case 3..<5:  return .orange
-        default:     return .red
-        }
+        .padding(12)
+        .background(FryTheme.cardElevated.opacity(0.72))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 }

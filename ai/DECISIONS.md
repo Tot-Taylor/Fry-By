@@ -69,3 +69,13 @@
 **Decision:** A value-type `FryFormData` struct backs `EntryFormView`'s state. It converts to `FryRatingInput` for scoring and to `FryEntry` for persistence.
 
 **Why:** Avoids @State sprawl across 20+ fields. Cleanly initializes from an existing `FryEntry` for edit mode. Provides a single `ratingInput` computed property that bridges the form to the scoring layer.
+
+---
+
+## D-009 — Commit the Xcode project bundle
+
+**Decision:** Keep `FryBy.xcodeproj/project.pbxproj` committed in the repo instead of requiring every developer to recreate the project manually.
+
+**Why:** The app is an iOS/Xcode project, and opening a `.xcodeproj` without its `project.pbxproj` fails before the source files can be built. Committing the project bundle makes simulator launch reproducible after cloning or pulling the branch.
+
+**Impact:** Future Swift files added under `FryBy/` must also be added to the `FryBy` target sources in `FryBy.xcodeproj/project.pbxproj`.

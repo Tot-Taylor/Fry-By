@@ -5,19 +5,26 @@ struct EntryDetailView: View {
     @State private var showingEditForm = false
 
     var body: some View {
-        List {
-            overviewSection
-            flavorSection
-            textureSection
-            contextSection
-            if let notes = entry.notes, !notes.isEmpty {
-                Section("Notes") {
-                    Text(notes)
+        ScrollView {
+            VStack(spacing: 18) {
+                overviewSection
+                flavorSection
+                textureSection
+                contextSection
+                if let notes = entry.notes, !notes.isEmpty {
+                    FrySectionCard(title: "Notes") {
+                        Text(notes)
+                            .foregroundStyle(FryTheme.text)
+                    }
                 }
             }
+            .padding(16)
         }
+        .fryBackground()
         .navigationTitle(entry.restaurantName)
         .navigationBarTitleDisplayMode(.large)
+        .toolbarBackground(FryTheme.backgroundGlow, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbar {
             Button("Edit") { showingEditForm = true }
         }
@@ -29,37 +36,66 @@ struct EntryDetailView: View {
     // MARK: - Sections
 
     private var overviewSection: some View {
-        Section("Overview") {
-            LabeledContent("Restaurant", value: entry.restaurantName)
-            LabeledContent("Date", value: entry.date.formatted(date: .long, time: .shortened))
+        FrySectionCard(title: "Overview") {
+            detailRow("Restaurant", value: entry.restaurantName)
+            FryDivider()
+            detailRow("Date", value: entry.date.formatted(date: .long, time: .shortened))
+            FryDivider()
             HStack {
                 Text("Overall Score")
+                    .foregroundStyle(FryTheme.text)
                 Spacer()
-                Text(String(format: "%.1f / 10", entry.overallScore))
-                    .fontWeight(.bold)
-                    .foregroundStyle(scoreColor(entry.overallScore))
+                ZStack {
+                    Circle()
+                        .stroke(FryTheme.cardStroke.opacity(0.8), lineWidth: 6)
+                    Circle()
+                        .trim(from: 0, to: min(max(entry.overallScore / 10, 0), 1))
+                        .stroke(
+                            FryTheme.scoreColor(entry.overallScore),
+                            style: StrokeStyle(lineWidth: 6, lineCap: .round)
+                        )
+                        .rotationEffect(.degrees(-90))
+                    Text(String(format: "%.1f / 10", entry.overallScore))
+                        .font(.subheadline)
+                        .fontWeight(.black)
+                        .foregroundStyle(FryTheme.scoreColor(entry.overallScore))
+                        .monospacedDigit()
+                }
+                .frame(width: 96, height: 96)
             }
-            LabeledContent("Fry Type", value: entry.fryType.rawValue)
-            LabeledContent("Temperature", value: entry.temperature.rawValue)
+            FryDivider()
+            detailRow("Fry Type", value: entry.fryType.rawValue)
+            FryDivider()
+            detailRow("Temperature", value: entry.temperature.rawValue)
         }
     }
 
     private var flavorSection: some View {
-        Section("Flavor") {
+        FrySectionCard(title: "Flavor") {
             ratingRow("Undipped Flavor", value: entry.undippedFlavor)
-            if let v = entry.ketchupFlavor { ratingRow("Flavor in Ketchup", value: v) }
+            if let v = entry.ketchupFlavor {
+                FryDivider()
+                ratingRow("Flavor in Ketchup", value: v)
+            }
             if let v = entry.signatureSauceFlavor {
+                FryDivider()
                 if let name = entry.signatureSauceName, !name.isEmpty {
-                    LabeledContent("Other Sauce", value: name)
+                    detailRow("Other Sauce", value: name)
+                    FryDivider()
                     ratingRow("Flavor in \(name)", value: v)
                 } else {
                     ratingRow("Other Sauce Flavor", value: v)
                 }
             }
-            if let v = entry.dunkability { ratingRow("Sauce Retention", value: v) }
+            if let v = entry.dunkability {
+                FryDivider()
+                ratingRow("Sauce Retention", value: v)
+            }
             if let v = entry.extraSeasoning {
+                FryDivider()
                 if let name = entry.extraSeasoningName, !name.isEmpty {
-                    LabeledContent("Extra Seasoning", value: name)
+                    detailRow("Extra Seasoning", value: name)
+                    FryDivider()
                     ratingRow("Flavor with \(name)", value: v)
                 } else {
                     ratingRow("Flavor with Extra Seasoning", value: v)
@@ -69,15 +105,17 @@ struct EntryDetailView: View {
     }
 
     private var textureSection: some View {
-        Section("Texture") {
+        FrySectionCard(title: "Texture") {
             spectrumRow(
                 "Starchiness",
                 value: entry.starchiness,
                 negativeLabel: "Not Starchy Enough",
                 positiveLabel: "Too Starchy"
             )
-            LabeledContent("Crispy to Floppy Ratio", value: ratioLabel(entry.crispyFloppyRatio))
+            FryDivider()
+            detailRow("Crispy to Floppy Ratio", value: ratioLabel(entry.crispyFloppyRatio))
             if let v = entry.crispyQuality {
+                FryDivider()
                 spectrumRow(
                     "Crispy Quality",
                     value: v,
@@ -86,6 +124,7 @@ struct EntryDetailView: View {
                 )
             }
             if let v = entry.floppyQuality {
+                FryDivider()
                 spectrumRow(
                     "Floppy Quality",
                     value: v,
@@ -97,8 +136,9 @@ struct EntryDetailView: View {
     }
 
     private var contextSection: some View {
-        Section("Context") {
+        FrySectionCard(title: "Context") {
             ratingRow("Appearance", value: entry.appearance)
+            FryDivider()
             ratingRow("Hunger Level", value: entry.hungerLevel)
         }
     }
@@ -106,28 +146,44 @@ struct EntryDetailView: View {
     // MARK: - Row helpers
 
     @ViewBuilder
+    private func detailRow(_ label: String, value: String) -> some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text(label)
+                .foregroundStyle(FryTheme.text)
+            Spacer()
+            Text(value)
+                .fontWeight(.semibold)
+                .foregroundStyle(FryTheme.mutedText)
+                .multilineTextAlignment(.trailing)
+        }
+    }
+
+    @ViewBuilder
     private func ratingRow(_ label: String, value: Int) -> some View {
         HStack {
             Text(label)
+                .foregroundStyle(FryTheme.text)
             Spacer()
             HStack(spacing: 2) {
                 Text("\(value)")
-                    .fontWeight(.semibold)
-                    .foregroundStyle(ratingColor(value))
+                    .fontWeight(.black)
+                    .foregroundStyle(FryTheme.ratingColor(value))
                 Text("/ 10")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(FryTheme.mutedText)
             }
         }
     }
 
     @ViewBuilder
     private func spectrumRow(_ label: String, value: Int, negativeLabel: String, positiveLabel: String) -> some View {
-        HStack {
+        HStack(alignment: .firstTextBaseline) {
             Text(label)
+                .foregroundStyle(FryTheme.text)
             Spacer()
             Text(spectrumDisplayText(value: value, negativeLabel: negativeLabel, positiveLabel: positiveLabel))
-                .foregroundStyle(value == 0 ? Color.green : Color.secondary)
+                .fontWeight(.semibold)
+                .foregroundStyle(value == 0 ? FryTheme.success : FryTheme.mutedText)
                 .multilineTextAlignment(.trailing)
         }
     }
@@ -154,23 +210,5 @@ struct EntryDetailView: View {
         let label = value < 0 ? negativeLabel : positiveLabel
         let sign = value > 0 ? "+" : ""
         return "\(label) (\(sign)\(value))"
-    }
-
-    private func scoreColor(_ score: Double) -> Color {
-        switch score {
-        case 8...: return .green
-        case 6..<8: return .yellow
-        case 4..<6: return .orange
-        default: return .red
-        }
-    }
-
-    private func ratingColor(_ value: Int) -> Color {
-        switch value {
-        case 8...10: return .green
-        case 5..<8:  return .yellow
-        case 3..<5:  return .orange
-        default:     return .red
-        }
     }
 }

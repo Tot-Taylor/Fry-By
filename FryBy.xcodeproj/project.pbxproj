@@ -1,0 +1,407 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+		27E64ADEB75CAA2051ADFADC /* FryByApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFFBF7099E18484F6E999EA /* FryByApp.swift */; };
+		EA9E5E2A0F08B74D457EC613 /* FryEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7959BC4490D8B5EEBBFFC10B /* FryEntry.swift */; };
+		0CF8BACCC2271AD0547E1030 /* FryTemperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = E664E8C0BBC5D1FA4225D8D7 /* FryTemperature.swift */; };
+		B5D7288AFB90FF016493ED90 /* FryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710A6606B9E81269C88C48A9 /* FryType.swift */; };
+		050237E6BF854B71AC3B5229 /* DefaultFryScorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2775B1CC4B2723C4A7345A29 /* DefaultFryScorer.swift */; };
+		D677B815AC705AD23EEC6C16 /* ScoringStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA2F1111EBD8B8D44D9FC3E /* ScoringStrategy.swift */; };
+		1458A2E14A0F4413AAC308CC /* FryTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC003E46417FC4F8B6C70619 /* FryTheme.swift */; };
+		D39286D267D0BFF260607BB8 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63CEB09AC7D374EC870911F /* HomeView.swift */; };
+		E0A0F219836DCA1C1E17A242 /* EntryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 104E844567BEE87B36EDB40B /* EntryListView.swift */; };
+		970B2B8A7C351CBC8D72E3F7 /* EntryRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363EA88181D59649009EB81 /* EntryRowView.swift */; };
+		7FDF0A626559231150CC614C /* EntryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35EF624780E5D73E31A3595 /* EntryDetailView.swift */; };
+		8F020C4ED114FA09E59C189E /* EntryFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337B579AE7233942368FA066 /* EntryFormView.swift */; };
+		55BC60C815A2F5C210720C7A /* RatingSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5FB54B8D8787671DA9AA4B /* RatingSlider.swift */; };
+		AD5E937FB17F7B20CAA87C2E /* RatioSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3214C2928D1B4572D6397E07 /* RatioSlider.swift */; };
+		4CF11C4BEE36D42C26CAFD94 /* SpectrumSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91CD45B7F8FECDA4A4C7F088 /* SpectrumSlider.swift */; };
+		DFFFBF7099E18484F6E999EA /* FryByApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FryByApp.swift"; sourceTree = "<group>"; };
+		7959BC4490D8B5EEBBFFC10B /* FryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FryEntry.swift"; sourceTree = "<group>"; };
+		E664E8C0BBC5D1FA4225D8D7 /* FryTemperature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FryTemperature.swift"; sourceTree = "<group>"; };
+		710A6606B9E81269C88C48A9 /* FryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FryType.swift"; sourceTree = "<group>"; };
+		2775B1CC4B2723C4A7345A29 /* DefaultFryScorer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DefaultFryScorer.swift"; sourceTree = "<group>"; };
+		EAA2F1111EBD8B8D44D9FC3E /* ScoringStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScoringStrategy.swift"; sourceTree = "<group>"; };
+		BC003E46417FC4F8B6C70619 /* FryTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FryTheme.swift"; sourceTree = "<group>"; };
+		E63CEB09AC7D374EC870911F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeView.swift"; sourceTree = "<group>"; };
+		104E844567BEE87B36EDB40B /* EntryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EntryListView.swift"; sourceTree = "<group>"; };
+		7363EA88181D59649009EB81 /* EntryRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EntryRowView.swift"; sourceTree = "<group>"; };
+		F35EF624780E5D73E31A3595 /* EntryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EntryDetailView.swift"; sourceTree = "<group>"; };
+		337B579AE7233942368FA066 /* EntryFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EntryFormView.swift"; sourceTree = "<group>"; };
+		3C5FB54B8D8787671DA9AA4B /* RatingSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RatingSlider.swift"; sourceTree = "<group>"; };
+		3214C2928D1B4572D6397E07 /* RatioSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RatioSlider.swift"; sourceTree = "<group>"; };
+		91CD45B7F8FECDA4A4C7F088 /* SpectrumSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SpectrumSlider.swift"; sourceTree = "<group>"; };
+		85673086EF6CFD3A1F8591AF /* FryBy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FryBy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E50290A24C49A459B43487C5 = {
+			isa = PBXGroup;
+			children = (
+				3B5C792034575A779789924B /* FryBy */,
+				328EC33DF3954DC9B83FA285 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		328EC33DF3954DC9B83FA285 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				85673086EF6CFD3A1F8591AF /* FryBy.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3B5C792034575A779789924B /* FryBy */ = {
+			isa = PBXGroup;
+			children = (
+				DFFFBF7099E18484F6E999EA /* FryByApp.swift */,
+				BF657CFE8769AAE6C0570C29 /* Models */,
+				8C82E9E5E5C932654194020C /* Scoring */,
+				58492F208780FA5EF3807E8F /* Views */,
+			);
+			path = "FryBy";
+			sourceTree = "<group>";
+		};
+		BF657CFE8769AAE6C0570C29 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7959BC4490D8B5EEBBFFC10B /* FryEntry.swift */,
+				E664E8C0BBC5D1FA4225D8D7 /* FryTemperature.swift */,
+				710A6606B9E81269C88C48A9 /* FryType.swift */,
+			);
+			path = "Models";
+			sourceTree = "<group>";
+		};
+		8C82E9E5E5C932654194020C /* Scoring */ = {
+			isa = PBXGroup;
+			children = (
+				2775B1CC4B2723C4A7345A29 /* DefaultFryScorer.swift */,
+				EAA2F1111EBD8B8D44D9FC3E /* ScoringStrategy.swift */,
+			);
+			path = "Scoring";
+			sourceTree = "<group>";
+		};
+		58492F208780FA5EF3807E8F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				BC003E46417FC4F8B6C70619 /* FryTheme.swift */,
+				3E84BE39BF35B88E7410F977 /* Home */,
+				625A9BFED401FDFF85CF7282 /* EntryList */,
+				4EFB98ADB53FD3387F6BBD85 /* EntryDetail */,
+				C50E9B778E0C89888DE43847 /* EntryForm */,
+			);
+			path = "Views";
+			sourceTree = "<group>";
+		};
+		3E84BE39BF35B88E7410F977 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				E63CEB09AC7D374EC870911F /* HomeView.swift */,
+			);
+			path = "Home";
+			sourceTree = "<group>";
+		};
+		625A9BFED401FDFF85CF7282 /* EntryList */ = {
+			isa = PBXGroup;
+			children = (
+				104E844567BEE87B36EDB40B /* EntryListView.swift */,
+				7363EA88181D59649009EB81 /* EntryRowView.swift */,
+			);
+			path = "EntryList";
+			sourceTree = "<group>";
+		};
+		4EFB98ADB53FD3387F6BBD85 /* EntryDetail */ = {
+			isa = PBXGroup;
+			children = (
+				F35EF624780E5D73E31A3595 /* EntryDetailView.swift */,
+			);
+			path = "EntryDetail";
+			sourceTree = "<group>";
+		};
+		C50E9B778E0C89888DE43847 /* EntryForm */ = {
+			isa = PBXGroup;
+			children = (
+				337B579AE7233942368FA066 /* EntryFormView.swift */,
+				54FE5E34995DE10F87DF7B85 /* Components */,
+			);
+			path = "EntryForm";
+			sourceTree = "<group>";
+		};
+		54FE5E34995DE10F87DF7B85 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				3C5FB54B8D8787671DA9AA4B /* RatingSlider.swift */,
+				3214C2928D1B4572D6397E07 /* RatioSlider.swift */,
+				91CD45B7F8FECDA4A4C7F088 /* SpectrumSlider.swift */,
+			);
+			path = "Components";
+			sourceTree = "<group>";
+		};
+		4E57AE888889001C06A4F7E8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27E64ADEB75CAA2051ADFADC /* FryByApp.swift in Sources */,
+				EA9E5E2A0F08B74D457EC613 /* FryEntry.swift in Sources */,
+				0CF8BACCC2271AD0547E1030 /* FryTemperature.swift in Sources */,
+				B5D7288AFB90FF016493ED90 /* FryType.swift in Sources */,
+				050237E6BF854B71AC3B5229 /* DefaultFryScorer.swift in Sources */,
+				D677B815AC705AD23EEC6C16 /* ScoringStrategy.swift in Sources */,
+				1458A2E14A0F4413AAC308CC /* FryTheme.swift in Sources */,
+				D39286D267D0BFF260607BB8 /* HomeView.swift in Sources */,
+				E0A0F219836DCA1C1E17A242 /* EntryListView.swift in Sources */,
+				970B2B8A7C351CBC8D72E3F7 /* EntryRowView.swift in Sources */,
+				7FDF0A626559231150CC614C /* EntryDetailView.swift in Sources */,
+				8F020C4ED114FA09E59C189E /* EntryFormView.swift in Sources */,
+				55BC60C815A2F5C210720C7A /* RatingSlider.swift in Sources */,
+				AD5E937FB17F7B20CAA87C2E /* RatioSlider.swift in Sources */,
+				4CF11C4BEE36D42C26CAFD94 /* SpectrumSlider.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		69BE8A4D8E4D9DA4E7DB3928 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D6C9E8A172005E68A1DD674F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0E8A3AD980EC179856012B7E /* FryBy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B483F6EB73610DE752E457A0 /* Build configuration list for PBXNativeTarget "FryBy" */;
+			buildPhases = (
+				4E57AE888889001C06A4F7E8 /* Sources */,
+				69BE8A4D8E4D9DA4E7DB3928 /* Frameworks */,
+				D6C9E8A172005E68A1DD674F /* Resources */,
+			);
+			buildRules = ();
+			dependencies = ();
+			name = FryBy;
+			productName = FryBy;
+			productReference = 85673086EF6CFD3A1F8591AF /* FryBy.app */;
+			productType = "com.apple.product-type.application";
+		};
+		98F54143AB4E86B28C3AFEE0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					0E8A3AD980EC179856012B7E = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 41A2CC2D5321B7BB2E956CA5 /* Build configuration list for PBXProject "FryBy" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E50290A24C49A459B43487C5;
+			productRefGroup = 328EC33DF3954DC9B83FA285 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0E8A3AD980EC179856012B7E /* FryBy */,
+			);
+		};
+		89E1FD6268CC0F221A2BE178 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("DEBUG=1", "$(inherited)");
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E6DE6C99132752C914FEF632 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		7082CC0B6FC1282FCEABD07A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fryby.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		639A7CA24D39909E713B47F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fryby.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		41A2CC2D5321B7BB2E956CA5 /* Build configuration list for PBXProject "FryBy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				89E1FD6268CC0F221A2BE178 /* Debug */,
+				E6DE6C99132752C914FEF632 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B483F6EB73610DE752E457A0 /* Build configuration list for PBXNativeTarget "FryBy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7082CC0B6FC1282FCEABD07A /* Debug */,
+				639A7CA24D39909E713B47F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+	};
+	rootObject = 98F54143AB4E86B28C3AFEE0 /* Project object */;
+}
