@@ -30,7 +30,7 @@ struct EntryListView: View {
         .toolbarBackground(FryTheme.backgroundGlow, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .tint(FryTheme.fry)
-        .diarySearchable(when: selectedTab == .diary, text: $searchText)
+        .fryLogSearchable(text: $searchText)
         .safeAreaInset(edge: .top, spacing: 0) {
             tabSwitcher
         }
@@ -137,11 +137,7 @@ private enum FryLogTab: String, CaseIterable, Identifiable {
 
 private extension View {
     @ViewBuilder
-    func diarySearchable(when isEnabled: Bool, text: Binding<String>) -> some View {
-        if isEnabled {
-            searchable(text: text, prompt: "Filter by restaurant")
-        } else {
-            self
-        }
+    func fryLogSearchable(text: Binding<String>) -> some View {
+        searchable(text: text, prompt: "Filter by restaurant")
     }
 }
