@@ -14,6 +14,7 @@
 		1458A2E14A0F4413AAC308CC /* FryTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC003E46417FC4F8B6C70619 /* FryTheme.swift */; };
 		D39286D267D0BFF260607BB8 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63CEB09AC7D374EC870911F /* HomeView.swift */; };
 		E0A0F219836DCA1C1E17A242 /* EntryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 104E844567BEE87B36EDB40B /* EntryListView.swift */; };
+		A1B2C3D4E5F60718293A4B5C /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F5061728394A5B6C /* AnalyticsView.swift */; };
 		970B2B8A7C351CBC8D72E3F7 /* EntryRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363EA88181D59649009EB81 /* EntryRowView.swift */; };
 		7FDF0A626559231150CC614C /* EntryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35EF624780E5D73E31A3595 /* EntryDetailView.swift */; };
 		8F020C4ED114FA09E59C189E /* EntryFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337B579AE7233942368FA066 /* EntryFormView.swift */; };
@@ -29,6 +30,7 @@
 		BC003E46417FC4F8B6C70619 /* FryTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FryTheme.swift"; sourceTree = "<group>"; };
 		E63CEB09AC7D374EC870911F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeView.swift"; sourceTree = "<group>"; };
 		104E844567BEE87B36EDB40B /* EntryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EntryListView.swift"; sourceTree = "<group>"; };
+		B1C2D3E4F5061728394A5B6C /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnalyticsView.swift"; sourceTree = "<group>"; };
 		7363EA88181D59649009EB81 /* EntryRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EntryRowView.swift"; sourceTree = "<group>"; };
 		F35EF624780E5D73E31A3595 /* EntryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EntryDetailView.swift"; sourceTree = "<group>"; };
 		337B579AE7233942368FA066 /* EntryFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EntryFormView.swift"; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				104E844567BEE87B36EDB40B /* EntryListView.swift */,
+				B1C2D3E4F5061728394A5B6C /* AnalyticsView.swift */,
 				7363EA88181D59649009EB81 /* EntryRowView.swift */,
 			);
 			path = "EntryList";
@@ -151,6 +154,7 @@
 				1458A2E14A0F4413AAC308CC /* FryTheme.swift in Sources */,
 				D39286D267D0BFF260607BB8 /* HomeView.swift in Sources */,
 				E0A0F219836DCA1C1E17A242 /* EntryListView.swift in Sources */,
+				A1B2C3D4E5F60718293A4B5C /* AnalyticsView.swift in Sources */,
 				970B2B8A7C351CBC8D72E3F7 /* EntryRowView.swift in Sources */,
 				7FDF0A626559231150CC614C /* EntryDetailView.swift in Sources */,
 				8F020C4ED114FA09E59C189E /* EntryFormView.swift in Sources */,

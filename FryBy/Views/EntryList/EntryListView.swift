@@ -22,7 +22,7 @@ struct EntryListView: View {
             case .diary:
                 diaryList
             case .analytics:
-                AnalyticsPlaceholderView()
+                AnalyticsView(entries: entries, filteredEntries: filteredEntries, isFiltering: !searchText.isEmpty)
             }
         }
         .background(FryTheme.backgroundGradient.ignoresSafeArea())
@@ -132,33 +132,6 @@ private enum FryLogTab: String, CaseIterable, Identifiable {
         case .analytics:
             "chart.bar.xaxis"
         }
-    }
-}
-
-private struct AnalyticsPlaceholderView: View {
-    var body: some View {
-        VStack(spacing: 16) {
-            Spacer()
-
-            Image(systemName: "chart.bar.xaxis")
-                .font(.system(size: 52, weight: .semibold))
-                .foregroundStyle(FryTheme.fry)
-                .shadow(color: FryTheme.fry.opacity(0.35), radius: 18, x: 0, y: 8)
-
-            VStack(spacing: 8) {
-                Text("Analytics")
-                    .font(.title2.weight(.bold))
-                    .foregroundStyle(FryTheme.text)
-                Text("Your fry insights will live here soon.")
-                    .font(.subheadline)
-                    .multilineTextAlignment(.center)
-                    .foregroundStyle(FryTheme.mutedText)
-            }
-
-            Spacer()
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(24)
     }
 }
 
