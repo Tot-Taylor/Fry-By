@@ -32,6 +32,7 @@ struct AnalyticsView: View {
                     scoreOverTimeCard
                     scoreDistributionCard
                     countByMonthCard
+                    fryTypeBreakdownCard
                     topRestaurantsCard
                     averageScoreByRestaurantCard
                     countByRestaurantCard
@@ -81,12 +82,6 @@ struct AnalyticsView: View {
                 valueColor: summary.bestEntry.map { FryTheme.scoreColor($0.overallScore) } ?? FryTheme.mutedText
             )
 
-            AnalyticsMetricTile(
-                title: "Favorite Type",
-                value: summary.favoriteFryTypeText,
-                caption: summary.favoriteFryTypeCaption,
-                systemImage: "chart.pie.fill"
-            )
         }
     }
 
@@ -142,6 +137,23 @@ struct AnalyticsView: View {
                 )
             } else {
                 MonthlyCountChart(items: summary.monthlyEntryCounts)
+            }
+        }
+    }
+
+    private var fryTypeBreakdownCard: some View {
+        AnalyticsChartCard(
+            title: "Fry Type Breakdown",
+            subtitle: "Share of entries by fry cut in the current selection.",
+            systemImage: "chart.pie"
+        ) {
+            if summary.fryTypeBreakdown.isEmpty {
+                AnalyticsMissingDataView(
+                    title: "Missing Fry Type Data",
+                    message: "Choose fry types on entries to build this pie chart."
+                )
+            } else {
+                FryTypePieChart(items: summary.fryTypeBreakdown, totalCount: summary.entryCount)
             }
         }
     }
@@ -259,18 +271,6 @@ private struct FryAnalyticsSummary {
         bestEntry.map { Self.restaurantName(for: $0) }
     }
 
-    var favoriteFryTypeText: String {
-        favoriteFryType?.type.rawValue ?? "—"
-    }
-
-    var favoriteFryTypeCaption: String {
-        guard let favoriteFryType else { return "Needs fry type data" }
-        return "\(favoriteFryType.count) logged"
-    }
-
-    var favoriteFryType: FryTypeBreakdownItem? {
-        fryTypeBreakdown.first
-    }
 
     var scoreTrendPoints: [ScoreTrendPoint] {
         entries
@@ -530,6 +530,69 @@ private struct AnalyticsChartCard<Content: View>: View {
     }
 }
 
+private struct FryTypePieChart: View {
+    let items: [FryTypeBreakdownItem]
+    let totalCount: Int
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Chart(items) { item in
+                SectorMark(
+                    angle: .value("Entries", item.count),
+                    innerRadius: .ratio(0.55),
+                    angularInset: 2
+                )
+                .cornerRadius(4)
+                .foregroundStyle(fryTypeColor(item.type))
+            }
+            .frame(height: 240)
+
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], alignment: .leading, spacing: 10) {
+                ForEach(items) { item in
+                    FryTypeLegendRow(
+                        item: item,
+                        totalCount: totalCount,
+                        color: fryTypeColor(item.type)
+                    )
+                }
+            }
+        }
+    }
+}
+
+private struct FryTypeLegendRow: View {
+    let item: FryTypeBreakdownItem
+    let totalCount: Int
+    let color: Color
+
+    private var percentageText: String {
+        guard totalCount > 0 else { return "0%" }
+        let percentage = Double(item.count) / Double(totalCount) * 100
+        return String(format: "%.0f%%", percentage)
+    }
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Circle()
+                .fill(color)
+                .frame(width: 10, height: 10)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(item.type.rawValue)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(FryTheme.text)
+                    .lineLimit(1)
+
+                Text("\(item.count) • \(percentageText)")
+                    .font(.caption2)
+                    .foregroundStyle(FryTheme.mutedText)
+                    .monospacedDigit()
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
 private struct ScoreOverTimeChart: View {
     let points: [ScoreTrendPoint]
 
@@ -694,6 +757,23 @@ private struct AnalyticsMissingDataView: View {
         .padding(12)
         .background(FryTheme.cardElevated.opacity(0.75))
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+}
+
+private func fryTypeColor(_ type: FryType) -> Color {
+    switch type {
+    case .shoestring:
+        return FryTheme.fryLight
+    case .pub:
+        return FryTheme.fry
+    case .steak:
+        return FryTheme.success
+    case .waffle:
+        return Color(red: 0.98, green: 0.47, blue: 0.18)
+    case .curly:
+        return Color(red: 0.76, green: 0.44, blue: 0.96)
+    case .crinkle:
+        return Color(red: 0.38, green: 0.70, blue: 0.98)
     }
 }
 
