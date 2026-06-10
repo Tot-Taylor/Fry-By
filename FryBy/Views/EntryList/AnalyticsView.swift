@@ -29,10 +29,17 @@ struct AnalyticsView: View {
                     )
                 } else {
                     summaryMetricsGrid
+                    overallScoreSnapshotCard
                     scoreOverTimeCard
                     scoreDistributionCard
                     countByMonthCard
                     fryTypeBreakdownCard
+                    temperatureBreakdownCard
+                    fieldAverageScoresCard
+                    textureBalanceCard
+                    if !summary.sauceAndSeasoningCounts.isEmpty {
+                        sauceAndSeasoningCard
+                    }
                     topRestaurantsCard
                     averageScoreByRestaurantCard
                     countByRestaurantCard
@@ -82,6 +89,27 @@ struct AnalyticsView: View {
                 valueColor: summary.bestEntry.map { FryTheme.scoreColor($0.overallScore) } ?? FryTheme.mutedText
             )
 
+        }
+    }
+
+    private var overallScoreSnapshotCard: some View {
+        AnalyticsChartCard(
+            title: "Overall Score Snapshot",
+            subtitle: "Average overall score for the current selection, with the best score called out.",
+            systemImage: "gauge.with.dots.needle.67percent"
+        ) {
+            if let averageScore = summary.averageScore {
+                AverageScoreGauge(
+                    averageScore: averageScore,
+                    bestScore: summary.bestEntry?.overallScore,
+                    entryCount: summary.entryCount
+                )
+            } else {
+                AnalyticsMissingDataView(
+                    title: "Missing Score Data",
+                    message: "Overall score analytics will appear as soon as entries match the filters."
+                )
+            }
         }
     }
 
@@ -155,6 +183,82 @@ struct AnalyticsView: View {
             } else {
                 FryTypePieChart(items: summary.fryTypeBreakdown, totalCount: summary.entryCount)
             }
+        }
+    }
+
+    private var temperatureBreakdownCard: some View {
+        AnalyticsChartCard(
+            title: "Temperature Breakdown",
+            subtitle: "Count of user-entered temperature selections for matching entries.",
+            systemImage: "thermometer.medium"
+        ) {
+            if summary.temperatureBreakdown.isEmpty {
+                AnalyticsMissingDataView(
+                    title: "Missing Temperature Data",
+                    message: "Temperature selections will appear once entries match the filters."
+                )
+            } else {
+                CountBarChart(
+                    items: summary.temperatureBreakdown.map { CountChartItem(label: $0.temperature.rawValue, count: $0.count) },
+                    xTitle: "Temperature",
+                    yTitle: "Entries",
+                    horizontal: true
+                )
+            }
+        }
+    }
+
+    private var fieldAverageScoresCard: some View {
+        AnalyticsChartCard(
+            title: "Average Entered Ratings",
+            subtitle: "Average 1–10 values for manually entered rating fields with available data.",
+            systemImage: "slider.horizontal.3"
+        ) {
+            if summary.averageRatingFields.isEmpty {
+                AnalyticsMissingDataView(
+                    title: "Missing Rating Data",
+                    message: "Rating-field averages will appear once entries match the filters."
+                )
+            } else {
+                RatingAverageChart(items: summary.averageRatingFields)
+            }
+        }
+    }
+
+    private var textureBalanceCard: some View {
+        AnalyticsChartCard(
+            title: "Crispy vs. Floppy Balance",
+            subtitle: "Distribution of the user-entered crispy/floppy ratio field.",
+            systemImage: "circle.lefthalf.filled"
+        ) {
+            if summary.crispyFloppyBreakdown.isEmpty {
+                AnalyticsMissingDataView(
+                    title: "Missing Texture Data",
+                    message: "Texture ratio counts will appear once entries match the filters."
+                )
+            } else {
+                CountBarChart(
+                    items: summary.crispyFloppyBreakdown,
+                    xTitle: "Texture Ratio",
+                    yTitle: "Entries",
+                    horizontal: true
+                )
+            }
+        }
+    }
+
+    private var sauceAndSeasoningCard: some View {
+        AnalyticsChartCard(
+            title: "Sauces & Seasonings",
+            subtitle: "Most-used custom sauce and seasoning names entered on ratings.",
+            systemImage: "takeoutbag.and.cup.and.straw"
+        ) {
+            CountBarChart(
+                items: summary.sauceAndSeasoningCounts,
+                xTitle: "Name",
+                yTitle: "Entries",
+                horizontal: true
+            )
         }
     }
 
@@ -372,6 +476,81 @@ private struct FryAnalyticsSummary {
         }
     }
 
+    var temperatureBreakdown: [TemperatureBreakdownItem] {
+        FryTemperature.allCases.compactMap { temperature in
+            let count = entries.filter { $0.temperature == temperature }.count
+            guard count > 0 else { return nil }
+            return TemperatureBreakdownItem(temperature: temperature, count: count)
+        }
+        .sorted {
+            if $0.count == $1.count {
+                return $0.temperature.rawValue < $1.temperature.rawValue
+            }
+            return $0.count > $1.count
+        }
+    }
+
+    var averageRatingFields: [RatingAverageItem] {
+        [
+            ratingAverage(label: "Undipped Flavor", values: entries.map(\.undippedFlavor)),
+            ratingAverage(label: "Appearance", values: entries.map(\.appearance)),
+            ratingAverage(label: "Hunger Level", values: entries.map(\.hungerLevel)),
+            optionalRatingAverage(label: "Ketchup Flavor", values: entries.compactMap(\.ketchupFlavor)),
+            optionalRatingAverage(label: "Other Sauce Flavor", values: entries.compactMap(\.signatureSauceFlavor)),
+            optionalRatingAverage(label: "Sauce Retention", values: entries.compactMap(\.dunkability)),
+            optionalRatingAverage(label: "Extra Seasoning", values: entries.compactMap(\.extraSeasoning))
+        ]
+        .compactMap { $0 }
+        .sorted {
+            if $0.average == $1.average {
+                return $0.label < $1.label
+            }
+            return $0.average > $1.average
+        }
+    }
+
+    var crispyFloppyBreakdown: [CountChartItem] {
+        let groupedEntries = Dictionary(grouping: entries) { Self.crispyFloppyLabel(for: $0.crispyFloppyRatio) }
+
+        return groupedEntries.map { label, ratioEntries in
+            CountChartItem(label: label, count: ratioEntries.count)
+        }
+        .sorted {
+            if $0.count == $1.count {
+                return $0.label < $1.label
+            }
+            return $0.count > $1.count
+        }
+    }
+
+    var sauceAndSeasoningCounts: [CountChartItem] {
+        var names: [String] = []
+
+        for entry in entries {
+            if let sauceName = Self.trimmedText(entry.signatureSauceName), entry.signatureSauceFlavor != nil {
+                names.append("Sauce: \(sauceName)")
+            }
+
+            if let seasoningName = Self.trimmedText(entry.extraSeasoningName), entry.extraSeasoning != nil {
+                names.append("Seasoning: \(seasoningName)")
+            }
+        }
+
+        let groupedNames = Dictionary(grouping: names, by: { $0 })
+
+        return groupedNames.map { name, values in
+            CountChartItem(label: name, count: values.count)
+        }
+        .sorted {
+            if $0.count == $1.count {
+                return $0.label < $1.label
+            }
+            return $0.count > $1.count
+        }
+        .prefix(6)
+        .map { $0 }
+    }
+
     private var restaurantSummaries: [RestaurantScoreSummary] {
         let groupedEntries = Dictionary(grouping: entries) { Self.restaurantName(for: $0) }
 
@@ -386,9 +565,40 @@ private struct FryAnalyticsSummary {
         }
     }
 
+    private func ratingAverage(label: String, values: [Int]) -> RatingAverageItem? {
+        guard !values.isEmpty else { return nil }
+        let average = Double(values.reduce(0, +)) / Double(values.count)
+        return RatingAverageItem(label: label, average: average, entryCount: values.count)
+    }
+
+    private func optionalRatingAverage(label: String, values: [Int]) -> RatingAverageItem? {
+        guard values.count >= 2 || values.count == entries.count else { return nil }
+        return ratingAverage(label: label, values: values)
+    }
+
     private static func restaurantName(for entry: FryEntry) -> String {
         let trimmedName = entry.restaurantName.trimmingCharacters(in: .whitespacesAndNewlines)
         return trimmedName.isEmpty ? "Unknown Restaurant" : trimmedName
+    }
+
+    private static func trimmedText(_ text: String?) -> String? {
+        let trimmedText = text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return trimmedText.isEmpty ? nil : trimmedText
+    }
+
+    private static func crispyFloppyLabel(for ratio: Int) -> String {
+        switch ratio {
+        case -4: return "All Crispy"
+        case -3: return "Mostly Crispy"
+        case -2: return "More Crispy"
+        case -1: return "Slightly Crispy"
+        case 0: return "Even Split"
+        case 1: return "Slightly Floppy"
+        case 2: return "More Floppy"
+        case 3: return "Mostly Floppy"
+        case 4: return "All Floppy"
+        default: return "Even Split"
+        }
     }
 
     private static let shortDateFormatter: DateFormatter = {
@@ -456,6 +666,19 @@ private struct FryTypeBreakdownItem: Identifiable {
     var id: FryType { type }
     let type: FryType
     let count: Int
+}
+
+private struct TemperatureBreakdownItem: Identifiable {
+    var id: FryTemperature { temperature }
+    let temperature: FryTemperature
+    let count: Int
+}
+
+private struct RatingAverageItem: Identifiable {
+    var id: String { label }
+    let label: String
+    let average: Double
+    let entryCount: Int
 }
 
 private struct AnalyticsMetricTile: View {
@@ -526,6 +749,61 @@ private struct AnalyticsChartCard<Content: View>: View {
             FryDivider()
 
             content
+        }
+    }
+}
+
+private struct AverageScoreGauge: View {
+    let averageScore: Double
+    let bestScore: Double?
+    let entryCount: Int
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 18) {
+            ZStack {
+                Circle()
+                    .stroke(FryTheme.cardStroke.opacity(0.75), lineWidth: 18)
+
+                Circle()
+                    .trim(from: 0, to: min(max(averageScore / 10, 0), 1))
+                    .stroke(
+                        FryTheme.scoreColor(averageScore),
+                        style: StrokeStyle(lineWidth: 18, lineCap: .round)
+                    )
+                    .rotationEffect(.degrees(-90))
+
+                VStack(spacing: 2) {
+                    Text(String(format: "%.1f", averageScore))
+                        .font(.system(size: 38, weight: .black, design: .rounded))
+                        .foregroundStyle(FryTheme.scoreColor(averageScore))
+                        .monospacedDigit()
+                    Text("AVG / 10")
+                        .font(.caption2.weight(.bold))
+                        .tracking(1)
+                        .foregroundStyle(FryTheme.mutedText)
+                }
+            }
+            .frame(width: 150, height: 150)
+
+            VStack(alignment: .leading, spacing: 10) {
+                AnalyticsProgressRow(
+                    label: "Average Overall",
+                    valueText: String(format: "%.1f", averageScore),
+                    fraction: averageScore / 10,
+                    tint: FryTheme.scoreColor(averageScore),
+                    caption: "Across \(entryCount) \(entryCount == 1 ? "entry" : "entries")"
+                )
+
+                if let bestScore {
+                    AnalyticsProgressRow(
+                        label: "Best Overall",
+                        valueText: String(format: "%.1f", bestScore),
+                        fraction: bestScore / 10,
+                        tint: FryTheme.scoreColor(bestScore),
+                        caption: "Highest selected score"
+                    )
+                }
+            }
         }
     }
 }
@@ -661,6 +939,30 @@ private struct MonthlyCountChart: View {
         .chartYAxis { analyticsYAxisMarks() }
         .chartXAxis { analyticsXAxisMarks() }
         .frame(height: 220)
+    }
+}
+
+private struct RatingAverageChart: View {
+    let items: [RatingAverageItem]
+
+    var body: some View {
+        Chart(items) { item in
+            BarMark(
+                x: .value("Average Rating", item.average),
+                y: .value("Field", item.label)
+            )
+            .foregroundStyle(FryTheme.ratingColor(Int(item.average.rounded())))
+            .annotation(position: .trailing, alignment: .leading) {
+                Text(String(format: "%.1f (n=%d)", item.average, item.entryCount))
+                    .font(.caption2.weight(.bold))
+                    .foregroundStyle(FryTheme.text)
+                    .monospacedDigit()
+            }
+        }
+        .chartXScale(domain: 0...10)
+        .chartYAxis { analyticsYAxisMarks() }
+        .chartXAxis { analyticsXAxisMarks() }
+        .frame(height: max(220, CGFloat(items.count) * 38))
     }
 }
 
